@@ -1,0 +1,342 @@
+// ========================================
+// 注文データ定義
+// ========================================
+
+// 注文データの定義
+const orderData = {
+    'tochigi-factory': {
+        '栃木_建築A北': [
+            {
+                id: '1CX1Y3',
+                time: '6:03',
+                line: '栃木_建築A北',
+                project: '川崎柱',
+                orderNo: '1',
+                unloadingNo: '1',
+                formworkNo: 'No.1 No.3',
+                strength: '60N',
+                mixNo: '77777',
+                volume: 11.4,
+                batcher: '第2',
+                batchStatus: 'completed',
+                batchRule: 'おまかせ',
+                message: '急ぎでお願いします。\n追加で注文してください。\n1バッチ目11.4㎥\n2バッチ目6.0㎥\n3バッチ目6.0㎥\n4バッチ目6.0㎥',
+                wetQuantity: 2.6
+            },
+            {
+                id: '1CX1Y2',
+                time: '6:45',
+                line: '栃木_建築B北',
+                project: '世田谷小梁',
+                orderNo: '2',
+                unloadingNo: '2',
+                formworkNo: 'No.4',
+                strength: '30N',
+                mixNo: '55555',
+                volume: 6.0,
+                batcher: '第2',
+                batchStatus: 'completed',
+                batchRule: 'おまかせ',
+                message: '',
+                wetQuantity: 0
+            },
+            {
+                id: '2GX1Y1',
+                time: '8:21',
+                line: '栃木_南工場',
+                project: '幕張GB',
+                orderNo: '3',
+                unloadingNo: '20',
+                formworkNo: 'No.1',
+                strength: '70N',
+                mixNo: '77777',
+                volume: 3.8,
+                batcher: '第3',
+                batchStatus: 'completed',
+                batchRule: 'おまかせ',
+                message: '',
+                wetQuantity: 0
+            },
+            {
+                id: '1CX1Y7',
+                time: '9:15',
+                line: '栃木_建築A北',
+                project: '〇〇ビル新築工事',
+                orderNo: '6',
+                unloadingNo: '1',
+                formworkNo: 'No.7',
+                strength: '60N',
+                mixNo: '66666',
+                volume: 5.9,
+                batcher: '第2',
+                batchStatus: 'pending',
+                batchRule: 'おまかせ',
+                message: '',
+                wetQuantity: 0
+            },
+            {
+                id: '1CX1Y8',
+                time: '9:30',
+                line: '栃木_建築A北',
+                project: '〇〇ビル新築工事',
+                orderNo: '7',
+                unloadingNo: '1',
+                formworkNo: 'No.8',
+                strength: '60N',
+                mixNo: '66666',
+                volume: 6.0,
+                batcher: '第2',
+                batchStatus: 'pending',
+                batchRule: 'おまかせ',
+                message: '',
+                wetQuantity: 0
+            }
+        ],
+        '栃木_建築B北': [
+            {
+                id: '1EX1Y2',
+                time: '8:44',
+                line: '栃木_建築B北',
+                project: '世田谷小梁',
+                orderNo: '4',
+                unloadingNo: '2',
+                formworkNo: 'No.4 No.8',
+                strength: '36N',
+                mixNo: '66666',
+                volume: 6.25,
+                batcher: '第2',
+                batchStatus: 'pending',
+                batchRule: 'おまかせ',
+                message: '',
+                wetQuantity: 0
+            }
+        ],
+        '栃木_南工場': [
+            {
+                id: '1EX1Y1',
+                time: '8:56',
+                line: '栃木_南工場',
+                project: '横浜ビル',
+                orderNo: '5',
+                unloadingNo: '20',
+                formworkNo: 'No.2',
+                strength: '42N',
+                mixNo: '44444',
+                volume: 8.5,
+                batcher: '第3',
+                batchStatus: 'pending',
+                batchRule: 'おまかせ',
+                message: '',
+                wetQuantity: 0
+            }
+        ]
+    },
+    'ibaraki-factory': {
+        '茨城_B1ライン': [
+            {
+                id: '1IX1Y2',
+                time: '6:30',
+                line: '茨城_B1ライン',
+                project: '水戸タワー',
+                orderNo: '2',
+                unloadingNo: '',
+                formworkNo: 'No.1 No.2',
+                strength: '60N',
+                mixNo: '66666',
+                volume: 9.8,
+                batcher: '',
+                batchStatus: 'completed',
+                batchRule: 'おまかせ',
+                message: '',
+                wetQuantity: 0,
+                batches: [
+                    { batchNo: '2-1', m3: 1.3, volume: 1.3, time: '6:30', strength: '60N', project: '水戸タワー', isCompleted: false },
+                    { batchNo: '2-2', m3: 1.3, volume: 1.3, time: '6:40', strength: '60N', project: '水戸タワー', isCompleted: false },
+                    { batchNo: '2-3', m3: 1.3, volume: 1.3, time: '6:50', strength: '60N', project: '水戸タワー', isCompleted: false },
+                    { batchNo: '2-4', m3: 1.3, volume: 1.3, time: '7:00', strength: '60N', project: '水戸タワー', isCompleted: false },
+                    { batchNo: '2-5', m3: 1.3, volume: 1.3, time: '7:10', strength: '60N', project: '水戸タワー', isCompleted: false },
+                    { batchNo: '2-6', m3: 1.3, volume: 1.3, time: '7:20', strength: '60N', project: '水戸タワー', isCompleted: false },
+                    { batchNo: '2-7', m3: 1.3, volume: 1.3, time: '7:30', strength: '60N', project: '水戸タワー', isCompleted: false },
+                    { batchNo: '2-8', m3: 0.7, volume: 0.7, time: '7:40', strength: '60N', project: '水戸タワー', isCompleted: false }
+                ]
+            },
+            {
+                id: '1IX1Y3',
+                time: '8:00',
+                line: '茨城_B1ライン',
+                project: 'つくばセンター',
+                orderNo: '5',
+                unloadingNo: '',
+                formworkNo: 'No.3',
+                strength: '45N',
+                mixNo: '66666',
+                volume: 7.2,
+                batcher: '',
+                batchStatus: 'completed',
+                batchRule: 'おまかせ',
+                message: '',
+                wetQuantity: 0,
+                batches: [
+                    { batchNo: '5-1', m3: 1.3, volume: 1.3, time: '8:00', strength: '45N', project: 'つくばセンター', isCompleted: false },
+                    { batchNo: '5-2', m3: 1.3, volume: 1.3, time: '8:10', strength: '45N', project: 'つくばセンター', isCompleted: false },
+                    { batchNo: '5-3', m3: 1.3, volume: 1.3, time: '8:20', strength: '45N', project: 'つくばセンター', isCompleted: false },
+                    { batchNo: '5-4', m3: 1.3, volume: 1.3, time: '8:30', strength: '45N', project: 'つくばセンター', isCompleted: false },
+                    { batchNo: '5-5', m3: 1.3, volume: 1.3, time: '8:40', strength: '45N', project: 'つくばセンター', isCompleted: false },
+                    { batchNo: '5-6', m3: 0.7, volume: 0.7, time: '8:50', strength: '45N', project: 'つくばセンター', isCompleted: false }
+                ]
+            },
+            {
+                id: '1IX1Y8',
+                time: '8:30',
+                line: '茨城_B1ライン',
+                project: '〇〇ビル工事',
+                orderNo: '6',
+                unloadingNo: '',
+                formworkNo: 'No.8',
+                strength: '36N',
+                mixNo: '33333',
+                volume: 6.8,
+                batcher: '',
+                batchStatus: 'pending',
+                batchRule: 'おまかせ',
+                message: '',
+                wetQuantity: 0
+            },
+            {
+                id: '3IX1Y1',
+                time: '9:00',
+                line: '茨城_B1ライン',
+                project: '〇〇駅再開発',
+                orderNo: '7',
+                unloadingNo: '',
+                formworkNo: 'No.1',
+                strength: '60N',
+                mixNo: '66666',
+                volume: 5.2,
+                batcher: '',
+                batchStatus: 'pending',
+                batchRule: 'おまかせ',
+                message: '',
+                wetQuantity: 0
+            }
+        ],
+        '茨城_B2ライン': [
+            {
+                id: '1CX1Y2',
+                time: '9:15',
+                line: '茨城_B2ライン',
+                project: '土浦プラザ',
+                orderNo: '8',
+                unloadingNo: '',
+                formworkNo: 'No.5 No.6',
+                strength: '38N',
+                mixNo: '33333',
+                volume: 5.5,
+                batcher: '',
+                batchStatus: 'pending',
+                batchRule: 'おまかせ',
+                message: '',
+                wetQuantity: 0
+            }
+        ],
+        '茨城_Aライン': [
+            {
+                time: '6:00',
+                line: '茨城_Aライン',
+                project: '鹿島港',
+                orderNo: '1',
+                unloadingNo: '',
+                formworkNo: 'No.7',
+                strength: '50N',
+                mixNo: '77777',
+                volume: 10.3,
+                batcher: '',
+                batchStatus: 'completed',
+                batchRule: 'おまかせ',
+                message: '',
+                wetQuantity: 2.6,
+                batches: [
+                    { batchNo: '1-1', m3: 1.3, volume: 1.3, time: '6:00', strength: '50N', project: '鹿島港', isCompleted: true },
+                    { batchNo: '1-2', m3: 1.3, volume: 1.3, time: '6:10', strength: '50N', project: '鹿島港', isCompleted: true },
+                    { batchNo: '1-3', m3: 1.3, volume: 1.3, time: '6:20', strength: '50N', project: '鹿島港', isCompleted: false },
+                    { batchNo: '1-4', m3: 1.3, volume: 1.3, time: '6:30', strength: '50N', project: '鹿島港', isCompleted: false },
+                    { batchNo: '1-5', m3: 1.3, volume: 1.3, time: '6:40', strength: '50N', project: '鹿島港', isCompleted: false },
+                    { batchNo: '1-6', m3: 1.3, volume: 1.3, time: '6:50', strength: '50N', project: '鹿島港', isCompleted: false },
+                    { batchNo: '1-7', m3: 1.3, volume: 1.3, time: '7:00', strength: '50N', project: '鹿島港', isCompleted: false },
+                    { batchNo: '1-8', m3: 1.2, volume: 1.2, time: '7:10', strength: '50N', project: '鹿島港', isCompleted: false }
+                ]
+            },
+            {
+                time: '7:30',
+                line: '茨城_Aライン',
+                project: 'つくば研究学園',
+                orderNo: '4',
+                unloadingNo: '',
+                formworkNo: 'No.9',
+                strength: '50N',
+                mixNo: '66666',
+                volume: 8.5,
+                batcher: '',
+                batchStatus: 'completed',
+                batchRule: 'おまかせ',
+                message: '',
+                wetQuantity: 0,
+                batches: [
+                    { batchNo: '4-1', m3: 1.3, volume: 1.3, time: '7:30', strength: '50N', project: 'つくば研究学園', isCompleted: false },
+                    { batchNo: '4-2', m3: 1.3, volume: 1.3, time: '7:40', strength: '50N', project: 'つくば研究学園', isCompleted: false },
+                    { batchNo: '4-3', m3: 1.3, volume: 1.3, time: '7:50', strength: '50N', project: 'つくば研究学園', isCompleted: false },
+                    { batchNo: '4-4', m3: 1.3, volume: 1.3, time: '8:00', strength: '50N', project: 'つくば研究学園', isCompleted: false },
+                    { batchNo: '4-5', m3: 1.3, volume: 1.3, time: '8:10', strength: '50N', project: 'つくば研究学園', isCompleted: false },
+                    { batchNo: '4-6', m3: 1.3, volume: 1.3, time: '8:20', strength: '50N', project: 'つくば研究学園', isCompleted: false },
+                    { batchNo: '4-7', m3: 0.7, volume: 0.7, time: '8:30', strength: '50N', project: 'つくば研究学園', isCompleted: false }
+                ]
+            },
+            {
+                time: '9:30',
+                line: '茨城_Aライン',
+                project: '鹿島港',
+                orderNo: '9',
+                unloadingNo: '',
+                formworkNo: 'No.7',
+                strength: '50N',
+                mixNo: '55555',
+                volume: 10.3,
+                batcher: '',
+                batchStatus: 'pending',
+                batchRule: '指定',
+                message: '急ぎでお願いします。\n1バッチ目1.3㎥\n2バッチ目1.0㎥\n3バッチ目1.0㎥\n4バッチ目1.0㎥',
+                wetQuantity: 0
+            }
+        ],
+        '茨城_C1ライン': [
+            {
+                time: '7:00',
+                line: '茨城_C1ライン',
+                project: '日立港',
+                orderNo: '3',
+                unloadingNo: '',
+                formworkNo: 'No.10',
+                strength: '48N',
+                mixNo: '77777',
+                volume: 9.0,
+                batcher: '',
+                batchStatus: 'completed',
+                batchRule: 'おまかせ',
+                message: '',
+                wetQuantity: 0,
+                batches: [
+                    { batchNo: '3-1', m3: 1.3, volume: 1.3, time: '7:00', strength: '48N', project: '日立港', isCompleted: false },
+                    { batchNo: '3-2', m3: 1.3, volume: 1.3, time: '7:10', strength: '48N', project: '日立港', isCompleted: false },
+                    { batchNo: '3-3', m3: 1.3, volume: 1.3, time: '7:20', strength: '48N', project: '日立港', isCompleted: false },
+                    { batchNo: '3-4', m3: 1.3, volume: 1.3, time: '7:30', strength: '48N', project: '日立港', isCompleted: false },
+                    { batchNo: '3-5', m3: 1.3, volume: 1.3, time: '7:40', strength: '48N', project: '日立港', isCompleted: false },
+                    { batchNo: '3-6', m3: 1.3, volume: 1.3, time: '7:50', strength: '48N', project: '日立港', isCompleted: false },
+                    { batchNo: '3-7', m3: 1.2, volume: 1.2, time: '8:00', strength: '48N', project: '日立港', isCompleted: false }
+                ]
+            }
+        ],
+        '茨城_C2ライン': [],
+        '茨城_Dライン': [],
+        '茨城_その他': []
+    }
+};

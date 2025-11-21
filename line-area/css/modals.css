@@ -1,0 +1,648 @@
+/* ========================================
+   モーダル共通スタイル
+   ======================================== */
+.modal-content {
+    background: white;
+    border: 1px solid #000000;
+    border-radius: 8px;
+}
+
+.modal-ok-btn, .modal-cancel-btn {
+    padding: 10px 30px;
+    border: 2px solid #000000;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 50px;
+    background: white;
+    color: #000000;
+}
+
+.modal-ok-btn:hover, .modal-cancel-btn:hover {
+    background: #f0f0f0;
+}
+
+.modal-ok-btn:disabled, .modal-change-request-btn:disabled {
+    background: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.modal-ok-btn:disabled:hover, .modal-change-request-btn:disabled:hover {
+    background: #cccccc;
+}
+
+/* 注文ボタンのdisabledスタイル（注文画面のorder-btnを参考） */
+.modal-ok-btn.order-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: white;
+    color: #000000;
+}
+
+.modal-ok-btn.order-btn:disabled:hover {
+    background: white;
+}
+
+.modal-header {
+    padding: 15px;
+    border-bottom: 2px solid #000000;
+}
+
+.modal-header h3 {
+    color: #000000;
+    font-size: 25px;
+    margin: 0;
+    text-align: left !important;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    padding: 13px;
+    border-top: 2px solid #000000;
+}
+
+/* 注文数量入力モーダル */
+.quantity-input-modal, .change-request-modal, .completion-modal, .order-concrete-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.quantity-input-modal.active, .change-request-modal.active, .completion-modal.active, .order-concrete-modal.active {
+    display: flex;
+}
+
+.quantity-input-modal .modal-content {
+    width: 95%;
+    max-width: 700px;
+    max-height: auto;
+}
+
+/* 注文数量入力画面 */
+.quantity-input-content {
+    display: flex;
+    justify-content: center;
+}
+
+.order-info-panel {
+    flex: 1;
+    background: white;
+    border: 2px solid #000000;
+    padding: 20px;
+}
+
+.order-tab {
+    padding: 10px 20px;
+    background: #000000;
+    color: white;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.project-info h3 {
+    margin-bottom: 15px;
+    color: #000000;
+}
+
+.project-details {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.floor-section {
+    border: 2px solid #000000;
+    padding: 15px;
+}
+
+.concrete-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 10px 0;
+}
+
+.quantity-input-panel {
+    width: 100%;
+    max-width: 700px;
+    padding: 10px;
+}
+
+.project-info-header {
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+}
+
+.project-info-name {
+    font-weight: bold;
+    color: #000000;
+    font-size: 20px;
+    margin-right: 15px;
+}
+
+.concrete-info {
+    color: #000000;
+    font-size: 18px;
+}
+
+.required {
+    color: #ff0000;
+    font-weight: bold;
+}
+
+.quantity-input-panel h3 {
+    margin-bottom: 20px;
+    color: #000000;
+}
+
+.total-quantity-container {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 25px;
+}
+
+.total-quantity {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.total-quantity label {
+    min-width: 50px;
+    font-size: 17px;
+}
+
+.total-quantity input {
+    width: 200px;
+    padding: 4px;
+    border: 2px solid #000000;
+    font-size: 18px;
+}
+
+.batch-division-radio {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.batch-select-section .batch-division-radio {
+    gap: 0px;
+}
+
+.batch-select-section-radio-label {
+    width: 120px;
+    text-align: center;
+    font-size: 17px;
+    background-color: #f0f0f0;
+    border-right: 1px solid #000000;
+    padding: 6px;
+}
+
+.batch-select-section-radio-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    flex: 1;
+}
+
+.batch-select-section-radio-buttons:has(input[type="radio"][disabled]) {
+    cursor: default;
+}
+
+.batch-radio-button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: default;
+}
+
+.batch-radio-button input[type="radio"][disabled] {
+    cursor: default;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.batch-radio-button input[type="radio"][disabled]:hover {
+    cursor: default;
+}
+
+.batch-radio-button input[type="radio"][disabled] + .radio-text {
+    cursor: default;
+    pointer-events: none;
+}
+
+.radio-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    font-size: 17px;
+}
+
+.radio-label label {
+    margin-right: 15px;
+    padding: 5px 10px;
+    min-width: 80px;
+    text-align: center;
+}
+
+.radio-label input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #000000;
+}
+
+.radio-text {
+    font-size: 16px;
+    color: #000000;
+}
+
+.batch-division-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.batch-input-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 5px 10px;
+    border: 2px solid #000000;
+    min-height: 400px;
+    position: relative;
+}
+
+.batch-input-container.disabled {
+    pointer-events: none;
+}
+
+.batch-input-container.disabled::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(240, 240, 240, 0.7);
+    z-index: 20;
+    pointer-events: none;
+}
+
+.batch-section-header {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.batch-mode-selection {
+    display: flex;
+    gap: 15px;
+}
+
+.batch-size-input-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 3px;
+}
+
+.batch-size-input-container label {
+    min-width: 80px;
+    font-size: 16px;
+}
+
+.batch-size-input-container input {
+    flex: 1;
+    padding: 7px;
+    border: 2px solid #000000;
+    font-size: 16px;
+    outline: none;
+    background-color: white !important;
+}
+
+.batch-size-input-container input:focus {
+    background-color: white !important;
+}
+
+.batch-size-input-container input:-webkit-autofill,
+.batch-size-input-container input:-webkit-autofill:hover,
+.batch-size-input-container input:-webkit-autofill:focus,
+.batch-size-input-container input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    box-shadow: 0 0 0 30px white inset !important;
+    background-color: white !important;
+    -webkit-text-fill-color: #000000 !important;
+}
+
+.batch-add-btn {
+    padding: 4px 17px;
+    border: 2px solid #000000;
+    background: white;
+    color: #000000;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 30px;
+}
+
+.batch-add-btn:hover {
+    background: #f0f0f0;
+}
+
+.batch-add-btn:disabled {
+    background-color: #f0f0f0;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.remaining-quantity {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 5px;
+    margin-left: 48px;
+}
+
+.remaining-quantity span {
+    font-size: 16px;
+    color: #000000;
+}
+
+.batch-table-container {
+    height: 280px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    border: 1px solid #000000;
+    scrollbar-width: auto;
+    scrollbar-gutter: stable;
+    -ms-overflow-style: scrollbar;
+}
+
+.batch-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+.batch-table th,
+.batch-table td {
+    border: 1px solid #000000;
+    padding: 5px;
+    text-align: center;
+    background: white;
+    font-weight: normal;
+}
+
+.batch-table th {
+    background-color: #f0f0f0;
+    border-top: none;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.batch-table th:first-child,
+.batch-table td:first-child {
+    border-left: none;
+}
+
+.batch-table td input {
+    width: 100%;
+    padding: 4px;
+    border: 1px solid #000000;
+    text-align: center;
+    font-size: 14px;
+}
+
+.batch-table td .delete-btn {
+    background: none;
+    border: none;
+    color: #000000;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.batch-table td .delete-btn:hover {
+    color: #ff0000;
+}
+
+.memo-input {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.memo-input label {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.memo-input textarea {
+    width: 100%;
+    min-height: 400px;
+    padding: 10px;
+    border: 2px solid #000000;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 16px;
+}
+
+/* 数量変更依頼画面 */
+.change-request-content {
+    position: relative;
+    flex: 1;
+}
+
+.change-request-modal .modal-content {
+    width: 90%;
+    max-width: 500px;
+}
+
+.change-info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.change-target {
+    color: #000000;
+    font-size: 18px;
+    margin: 10px;
+    text-align: left;
+    font-weight: normal;
+}
+
+.quantity-change-container {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.quantity-change {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.quantity-change label {
+    font-weight: bold;
+    font-size: 17px;
+    color: #000000;
+    text-align: center;
+}
+
+.quantity-change .before-change-label {
+    margin-bottom: 8px;
+}
+
+.quantity-change span {
+    font-size: 19px;
+    color: #000000;
+    font-weight: normal;
+}
+
+.quantity-change input {
+    width: 100px;
+    padding: 5px;
+    border: 1px solid #cccccc;
+    font-size: 20px;
+    text-align: center;
+}
+
+.quantity-change:last-child {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.quantity-change:last-child .input-with-unit {
+    display: flex;
+    gap: 5px;
+    margin-left: 20px;
+}
+
+.quantity-change:last-child input {
+    width: 100px;
+}
+
+.arrow {
+    font-size: 20px;
+    font-weight: bold;
+    color: #000000;
+}
+
+.quantity-change-container .arrow {
+    margin-top: 20px;
+}
+
+.unit {
+    font-weight: bold;
+    color: #000000;
+    font-size: 14px;
+    width: 100%;
+}
+
+/* 打設完了確認画面 */
+.completion-content {
+    position: relative;
+    flex: 1;
+}
+
+.completion-modal .modal-content {
+    width: 90%;
+    max-width: 500px;
+}
+
+.completion-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    margin-left: 20px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    max-width: 400px;
+}
+
+.info-item label {
+    font-weight: bold;
+    color: #000000;
+    font-size: 16px;
+    text-align: right;
+    min-width: 120px;
+    margin-right: 20px;
+}
+
+.info-item span {
+    color: #000000;
+    font-size: 16px;
+    text-align: left;
+}
+
+/* 注文強度選択画面 */
+.order-concrete-content {
+    position: relative;
+    flex: 1;
+}
+
+.order-concrete-modal .modal-content {
+    width: 90%;
+    max-width: 500px;
+}
+
+.order-concrete-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.order-concrete-types {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 5px;
+    margin-left: 40px;
+}
+
+.order-concrete-option {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.order-concrete-option input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+}
+

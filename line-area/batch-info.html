@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>コンクリートオーダーシステム - ラインエリア - バッチ情報</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/batch-info.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- バッチ情報画面 -->
+        <div id="batch-info-screen" class="screen active">
+            <div class="batch-info-header">
+                <div class="header-left">
+                    <select class="screen-selector">
+                        <option value="production-instruction">生産指示</option>
+                        <option value="batch-info" selected>バッチ情報</option>
+                    </select>
+                    <span class="date-info"></span>
+                    <select class="line-selector">
+                        <option value="A">栃木_建築A北</option>
+                        <option value="B">栃木_建築A北</option>
+                        <option value="A">茨城_Aライン</option>
+                        <option value="B">茨城_B1ライン</option>
+                    </select>
+                    <span class="line-info"></span>
+                </div>
+                <div class="header-right">
+                    <button class="logout-btn">ログアウト</button>
+                </div>
+            </div>
+
+            <div class="batch-info-content">
+                <div class="batch-info-panel">
+                    <div class="batch-info-section">
+                        <div class="batch-info-text">〇〇駅西口再開発</div>
+                    </div>
+                    <div class="batch-info-divider"></div>
+                    <div class="batch-info-section">
+                        <div class="batch-info-text">18B-10　19B-1　20B-10</div>
+                    </div>
+                    <div class="batch-info-divider"></div>
+                    <div class="batch-info-section">
+                        <div class="batch-info-text">36N 1.00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- データファイル -->
+    <script src="../js/data/line-production-data.js"></script>
+
+    <!-- ラインエリア機能別JavaScriptファイル -->
+    <script src="../js/line-area/screen-navigation.js"></script>
+    <script src="../js/line-area/batch-info.js"></script>
+    
+    <!-- メインファイル -->
+    <script src="line-area.js"></script>
+</body>
+</html>
+

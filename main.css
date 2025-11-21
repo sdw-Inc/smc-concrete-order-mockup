@@ -1,0 +1,272 @@
+/* リセットとベーススタイル */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Hiragino Sans', 'ヒラギノ角ゴシック', 'Yu Gothic', 'メイリオ', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.main-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+/* ヘッダー */
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    color: white;
+}
+
+.header h1 {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.header p {
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+/* システム選択 */
+.system-selection {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+    flex: 1;
+}
+
+.system-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
+}
+
+.system-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    border-color: #667eea;
+}
+
+.system-icon {
+    margin-bottom: 20px;
+}
+
+.system-icon i {
+    font-size: 64px;
+    color: #667eea;
+}
+
+.system-card h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.system-card > p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.system-description {
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.system-description ul {
+    list-style: none;
+    padding: 0;
+}
+
+.system-description li {
+    padding: 8px 0;
+    color: #555;
+    position: relative;
+    padding-left: 25px;
+}
+
+.system-description li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.access-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.access-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+}
+
+/* フッター */
+.footer {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.workflow-info h3 {
+    color: white;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.workflow-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 15px 20px;
+    border-radius: 10px;
+    min-width: 200px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.step-number {
+    background: #667eea;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.step-content h4 {
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 5px;
+}
+
+.step-content p {
+    color: #666;
+    font-size: 14px;
+}
+
+.step-arrow {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    .main-container {
+        padding: 15px;
+    }
+    
+    .header h1 {
+        font-size: 36px;
+    }
+    
+    .header p {
+        font-size: 16px;
+    }
+    
+    .system-selection {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .system-card {
+        padding: 20px;
+    }
+    
+    .system-icon i {
+        font-size: 48px;
+    }
+    
+    .system-card h2 {
+        font-size: 24px;
+    }
+    
+    .workflow-steps {
+        flex-direction: column;
+    }
+    
+    .step-arrow {
+        transform: rotate(90deg);
+    }
+    
+    .step {
+        min-width: auto;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 28px;
+    }
+    
+    .system-card {
+        padding: 15px;
+    }
+    
+    .system-icon i {
+        font-size: 40px;
+    }
+    
+    .system-card h2 {
+        font-size: 20px;
+    }
+    
+    .access-btn {
+        padding: 12px 24px;
+        font-size: 14px;
+    }
+    
+    .footer {
+        padding: 20px;
+    }
+    
+    .workflow-info h3 {
+        font-size: 20px;
+    }
+}

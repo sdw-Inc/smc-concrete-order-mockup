@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>コンクリートオーダーシステム - プラント操作室 - 生産指示</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/production-instruction.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 生産指示画面 -->
+        <div id="production-instruction-screen" class="screen active">
+            <div class="header">
+                <div class="header-left">
+                    <select class="screen-selector">
+                        <option value="production-instruction" selected>生産指示</option>
+                        <option value="batch-history">バッチ履歴</option>
+                    </select>
+                    <select class="factory-selector">
+                        <option value="tochigi-factory">栃木工場</option>
+                        <option value="ibaraki-factory">茨城工場</option>
+                    </select>
+                    <select class="batcher-filter-selector" id="batcher-filter-selector" style="display: none;">
+                        <option value="all">全てを表示</option>
+                        <option value="第2">第2バッチャー</option>
+                        <option value="第3">第3バッチャー</option>
+                    </select>
+                    <input type="date" class="date-selector" id="date-selector">
+                </div>
+                <div class="header-right">
+                    <button class="logout-btn">ログアウト</button>
+                </div>
+            </div>
+            <!-- グリッドレイアウト -->
+            <div class="parent">
+
+                <!-- 工程（打設予定）エリア -->
+                <div class="area pouring-schedule-area">
+                    <div class="area-header pouring-schedule-header">製造予定</div>
+                    <div class="pouring-schedule-content">
+                        <div class="schedule-header">
+                            <div class="line-title">
+                                <label class="line-selector-label">ライン</label>
+                                <select id="line-selector" class="line-selector">
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="schedule-body">
+                            <!-- 日付行 -->
+                            <div class="date-row">
+                                <div class="date-label">日付</div>
+                                <div class="date-cells">
+                                    <div class="date-column" id="today-date"></div>
+                                    <div class="date-column" id="tomorrow-date"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- プロジェクトセクション（JavaScriptで動的生成） -->
+                            <div id="project-sections-container">
+                                <!-- プロジェクトセクションはJavaScriptで動的に生成されます -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="add-order-form">
+                        <button class="parent-btn clear-selection-btn" style="display: none;">選択解除</button>
+                        <button class="parent-btn add-order-btn" id="add-order-btn">注文追加</button>
+                    </div>
+                </div>
+
+                <!-- 注文エリア -->
+                <div class="area order-area">
+                    <div class="area-header order-header">注文明細</div>
+                    <div class="order-table-container">
+                        <table class="order-table">
+                            <thead>
+                                <tr>
+                                    <th>時刻</th>
+                                    <th>ライン</th>
+                                    <th>物件略称</th>
+                                    <th>注文No</th>
+                                    <th>荷下No</th>
+                                    <th>型枠No</th>
+                                    <th>強度</th>
+                                    <th>調合No</th>
+                                    <th>m3</th>
+                                    <th>バッチャー</th>
+                                    <th>バッチ割</th>
+                                    <th>練混数量</th>
+                                    <th>削除</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- データはJavaScriptで動的に生成されます -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- バッチ分割エリア -->
+                <div class="area batch-division-area">
+                    <!-- バッチ割入力エリア -->
+                    <div class="batch-input-section">
+                        <div class="area-header batch-input-section-header">練混バッチ割</div>
+                        <table class="batch-info-table">
+                            <tr>
+                                <td class="info-label">ライン</td>
+                                <td class="info-value" id="batch-line">-</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">物件</td>
+                                <td class="info-value" id="batch-project">-</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">注文No</td>
+                                <td class="info-value" id="batch-order-no">-</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">強度 数量</td>
+                                <td class="info-value" id="batch-quantity">-</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">バッチ割</td>
+                                <td class="info-value" id="batch-rule">-</td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">コメント</td>
+                                <td class="info-value" id="batch-message"></td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">1バッチ量</td>
+                                <td class="info-value">
+                                    <div class="batch-size-container">
+                                        <input type="number" id="batch-size-input" class="batch-size-input" step="0.1" min="0.0" value="0.0">
+                                        <span class="batch-size-unit">㎥</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="info-label">残り</td>
+                                <td class="info-value" id="batch-remaining">-</td>
+                            </tr>
+                        </table>
+                        <div class="batch-add-section">
+                            <div class="batch-mode-selection">
+                                <label class="radio-label">
+                                    <input type="radio" name="batch-mode" value="auto" id="auto-mode" checked>
+                                    <span class="radio-text">自動分割</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="batch-mode" value="manual" id="manual-mode">
+                                    <span class="radio-text">手動入力</span>
+                                </label>
+                            </div>
+                            <button class="parent-btn batch-add-btn">追加</button>
+                        </div>
+                    </div>
+                    
+                    <!-- バッチ割表示エリア -->
+                    <div class="batch-display-section">
+                        <table class="batch-list-table">
+                            <thead>
+                                <tr class="area-header batch-list-header">
+                                    <th class="batch-no-header">バッチNo</th>
+                                    <th class="batch-m3-header">m3数</th>
+                                    <th class="batch-time-header">練順時刻</th>
+                                    <th class="batch-remove-header">削除</th>
+                                </tr>
+                            </thead>
+                            <tbody id="batch-list">
+                                <!-- バッチリストはJavaScriptで動的に生成 -->
+                            </tbody>
+                        </table>
+                        <!-- バッチ分割確定ボタン -->
+                        <div class="batch-confirm-section">
+                            <div class="batch-button-row">
+                                <button class="parent-btn batch-confirm-btn" id="batch-confirm-btn">バッチ割確定</button>
+                                <button class="parent-btn batch-clear-btn" id="batch-clear-btn" style="display: none;">一括削除</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 練り混ぜバッチ選択エリア -->
+                <div class="area batch-selection-area">
+                    <div class="area-header batch-selection-header">練り混ぜ順</div>
+                    
+                    <!-- 栃木工場用：練り混ぜ順テーブル -->
+                    <div id="tochigi-mixing-order" class="mixing-order-container" style="display: none;">
+                        <table class="order-table mixing-order-table">
+                            <thead>
+                                <tr>
+                                    <th>ライン</th>
+                                    <th>物件略称</th>
+                                    <th>バッチNo</th>
+                                    <th>強度</th>
+                                    <th>m3数</th>
+                                    <th>練順時刻</th>
+                                    <th>指示</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mixing-order-tbody">
+                                <!-- データはJavaScriptで動的に生成 -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- 茨城工場用：バッチ割付・練混予定テーブル -->
+                    <div id="ibaraki-batch-schedule" class="batch-schedule-container" style="display: none;">
+                        <div class="batch-schedule-table-container">
+                            <div class="batch-schedule-table-header">
+                                <p class="batch-schedule-table-header-line">ライン</p>
+                                <p class="batch-schedule-table-header-strength">強度</p>
+                                <p class="batch-schedule-table-header-mixing">練り指示</p>
+                            </div>
+                            <table class="order-table batch-schedule-table">
+                                <thead>
+                                    <tr>
+                                        <th>A</th>
+                                        <th>B1</th>
+                                        <th>B2</th>
+                                        <th>C1</th>
+                                        <th>C2</th>
+                                        <th>D</th>
+                                        <th>その他</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="batch-schedule-tbody">
+                                    <!-- データはJavaScriptで動的に生成 -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="batch-selection-button-container">
+                        <button class="parent-btn batch-selection-button" id="change-mixing-instruction-btn">練り指示変更</button>
+                        <button class="parent-btn batch-selection-button" id="delete-mixing-instruction-btn">練り指示削除</button>
+                        <button class="parent-btn batch-selection-button" id="change-after-mixing-btn">練り上がり後変更</button>
+                    </div>
+                </div>
+                <!-- 合計打設量エリア -->
+                <div class="area total-pouring-volume-area">
+                    <div class="area-header total-pouring-volume-header">打設量</div>
+                    <div class="pouring-volume-table-container">
+                        <div class="pouring-volume-table-wrapper">
+                            <table class="pouring-volume-table">
+                                <thead>
+                                    <tr>
+                                        <th class="line-name-header">ライン名</th>
+                                        <th class="pouring-volume-header">打設量</th>
+                                        <th class="mixing-volume-header">練り量</th>
+                                        <th class="scheduled-production-header">予定生産量</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pouring-volume-tbody">
+                                    <!-- データはJavaScriptで動的に生成 -->
+                                </tbody>
+                                <tfoot>
+                                    <tr class="total-row">
+                                        <td class="total-label">合計</td>
+                                        <td class="total-pouring-volume" id="total-pouring-volume">0.00</td>
+                                        <td class="total-mixing-volume" id="total-mixing-volume">0.00</td>
+                                        <td class="total-scheduled-production" id="total-scheduled-production">0.00</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <div class="percentage-display" id="percentage-display">0.0%</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 練り混ぜ確定エリア -->
+                <div class="area batch-selection-confirmed-area">
+                    <div class="batch-selection-confirmed-content">
+                        <div class="batch-selection-confirmed-content-inner">
+                            <div class="area-header batch-selection-confirmed-header">練混指示</div>
+                            <div class="mixing-instruction-content">
+                                <table class="mixing-instruction-table">
+                                    <tr>
+                                        <td class="instruction-label">累計バッチNo</td>
+                                        <td class="instruction-value" id="instruction-batch-no">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="instruction-label">ライン</td>
+                                        <td class="instruction-value" id="instruction-line">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="instruction-label">物件略称</td>
+                                        <td class="instruction-value" id="instruction-project">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="instruction-label">強度 数量</td>
+                                        <td class="instruction-value" id="instruction-strength">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="instruction-label">調合No</td>
+                                        <td class="instruction-value">
+                                            <input type="text" id="instruction-mix-no" class="instruction-input" placeholder="調合No">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="instruction-label">ミキサーNo.</td>
+                                        <td class="instruction-value">
+                                            <select id="instruction-mixer-no" class="instruction-select">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <button class="parent-btn confirm-mixing-btn confirm-mixing-instruction-btn" id="confirm-mixing-instruction-btn" disabled>練り指示確定</button>
+                                <button class="parent-btn confirm-mixing-btn" id="confirm-mixing-btn" disabled style="display: none;">練り上がり</button>
+                            </div>
+                        </div>
+                        <div class="standard-period-container">
+                            <p>標準期</p>
+                            <p id="standard-period-value">66666</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 運搬指示エリア -->
+                <div class="area transport-instruction-area">
+                    <div class="area-header transport-instruction-header">運搬指示</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 注文追加モーダル -->
+        <div id="order-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>注文追加</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-info-row">
+                        <span class="modal-label">日付</span>
+                        <span class="modal-value" id="modal-date">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">ライン</span>
+                        <span class="modal-value" id="modal-line">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">型枠番号</span>
+                        <span class="modal-value" id="modal-formwork">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">物件略称</span>
+                        <span class="modal-value" id="modal-project">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">強度</span>
+                        <select class="modal-select" id="modal-mix">
+                            <option value="">選択してください</option>
+                        </select>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">コンクリート量</span>
+                        <span class="modal-value" id="modal-concrete">-</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn modal-cancel-btn" id="modal-cancel">キャンセル</button>
+                    <button class="modal-btn modal-confirm-btn" id="modal-confirm">注文追加</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 空注文追加モーダル -->
+        <div id="empty-order-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>注文追加</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-info-row">
+                        <span class="modal-label">日付</span>
+                        <span class="modal-value" id="empty-modal-date">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">ライン</span>
+                        <span class="modal-value" id="empty-modal-line">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">型枠番号</span>
+                        <span class="modal-value" id="empty-modal-formwork">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">物件略称</span>
+                        <span class="modal-value" id="empty-modal-project">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">強度</span>
+                        <input type="text" class="modal-input" id="empty-modal-mix" placeholder="強度">
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">コンクリート量</span>
+                        <div class="modal-input-with-unit">
+                            <input type="number" class="modal-input" id="empty-modal-concrete" placeholder="コンクリート量" step="0.1" min="0">
+                            <span class="modal-unit">㎥</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn modal-cancel-btn" id="empty-modal-cancel">キャンセル</button>
+                    <button class="modal-btn modal-confirm-btn" id="empty-modal-confirm" disabled>注文追加</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 注文削除モーダル -->
+        <div id="delete-order-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>注文削除</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-info-row">
+                        <span class="modal-label">日付</span>
+                        <span class="modal-value" id="delete-modal-date">本日</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">ライン</span>
+                        <span class="modal-value" id="delete-modal-line">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">型枠番号</span>
+                        <span class="modal-value" id="delete-modal-formwork">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">物件略称</span>
+                        <span class="modal-value" id="delete-modal-project">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">強度</span>
+                        <span class="modal-value" id="delete-modal-strength">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">コンクリート量</span>
+                        <span class="modal-value" id="delete-modal-concrete">-</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn modal-cancel-btn" id="delete-modal-cancel">キャンセル</button>
+                    <button class="modal-btn modal-delete-btn" id="delete-modal-confirm">注文削除</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 練り指示変更モーダル -->
+        <div id="change-mixing-instruction-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content change-mixing-instruction-modal">
+                <div class="modal-header">
+                    <h2>練り指示変更</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-info-row">
+                        <span class="modal-label">日付</span>
+                        <span class="modal-value" id="change-modal-date">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">ライン</span>
+                        <span class="modal-value" id="change-modal-line">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">型枠番号</span>
+                        <span class="modal-value" id="change-modal-formwork">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">強度</span>
+                        <span class="modal-value" id="change-modal-strength">-</span>
+                    </div>
+                    <div class="modal-info-row change-modal-concrete-row">
+                        <span class="modal-label">コンクリート量</span>
+                        <div class="modal-input-with-unit">
+                            <span class="modal-value" id="change-modal-concrete-original">-</span>
+                            <span class="modal-unit">㎥</span>
+                            <span class="modal-arrow">→</span>
+                            <input type="number" class="modal-input" id="change-modal-concrete-input" placeholder="コンクリート量" step="0.1" min="0">
+                            <span class="modal-unit">㎥</span>
+                        </div>
+                    </div>
+                    <div class="modal-info-row change-modal-change-request-row" id="change-modal-change-request-row" style="display: none;">
+                        <span class="modal-label">変更依頼</span>
+                        <span class="modal-value" id="change-modal-change-request-volume">-</span>
+                        <span class="modal-unit">㎥</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn modal-cancel-btn" id="change-modal-cancel">キャンセル</button>
+                    <button class="modal-btn modal-confirm-btn" id="change-modal-confirm">変更</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 練り指示削除モーダル -->
+        <div id="delete-mixing-instruction-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>練り指示削除</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-info-row">
+                        <span class="modal-label">日付</span>
+                        <span class="modal-value" id="delete-mixing-modal-date">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">ライン</span>
+                        <span class="modal-value" id="delete-mixing-modal-line">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">型枠番号</span>
+                        <span class="modal-value" id="delete-mixing-modal-formwork">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">強度</span>
+                        <span class="modal-value" id="delete-mixing-modal-strength">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">コンクリート量</span>
+                        <span class="modal-value" id="delete-mixing-modal-concrete">-</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn modal-cancel-btn" id="delete-mixing-modal-cancel">キャンセル</button>
+                    <button class="modal-btn modal-delete-btn" id="delete-mixing-modal-confirm">削除</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 練り上がり後変更モーダル -->
+        <div id="change-after-mixing-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content change-after-mixing-modal">
+                <div class="modal-header">
+                    <h2>練り上がり後変更</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-info-row">
+                        <span class="modal-label">日付</span>
+                        <span class="modal-value" id="change-after-modal-date">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">強度</span>
+                        <span class="modal-value" id="change-after-modal-strength">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">コンクリート量</span>
+                        <div class="modal-input-with-unit">
+                            <span class="modal-value" id="change-after-modal-concrete">-</span>
+                            <span class="modal-unit">㎥</span>
+                        </div>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">バッチNo</span>
+                        <span class="modal-value" id="change-after-modal-batch-no">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">ライン</span>
+                        <div class="modal-input-with-unit">
+                            <span class="modal-value" id="change-after-modal-current-line">-</span>
+                            <span class="modal-unit">→</span>
+                            <select class="modal-select" id="change-after-modal-line">
+                                <option value="">選択してください</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">型枠番号</span>
+                        <div class="modal-input-with-unit">
+                            <span class="modal-value" id="change-after-modal-current-formwork">-</span>
+                            <span class="modal-unit">→</span>
+                            <select class="modal-select" id="change-after-modal-formwork">
+                                <option value="">選択してください</option>
+                                <option value="No.01">No.01</option>
+                                <option value="No.02">No.02</option>
+                                <option value="No.03">No.03</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn modal-cancel-btn" id="change-after-modal-cancel">キャンセル</button>
+                    <button class="modal-btn modal-confirm-btn" id="change-after-modal-confirm">変更</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 練り上がり確認モーダル -->
+        <div id="mixing-completion-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>練り上がり確認</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="modal-info-row">
+                        <span class="modal-label">日付</span>
+                        <span class="modal-value" id="mixing-completion-modal-date">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">ライン</span>
+                        <span class="modal-value" id="mixing-completion-modal-line">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">型枠番号</span>
+                        <span class="modal-value" id="mixing-completion-modal-formwork">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">物件略称</span>
+                        <span class="modal-value" id="mixing-completion-modal-project">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">強度</span>
+                        <span class="modal-value" id="mixing-completion-modal-strength">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">コンクリート量</span>
+                        <span class="modal-value" id="mixing-completion-modal-concrete">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">調合No</span>
+                        <span class="modal-value" id="mixing-completion-modal-mix-no">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">ミキサーNo</span>
+                        <span class="modal-value" id="mixing-completion-modal-mixer-no">-</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-btn modal-cancel-btn" id="mixing-completion-modal-cancel">キャンセル</button>
+                    <button class="modal-btn modal-confirm-btn" id="mixing-completion-modal-confirm">確定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- データファイル -->
+    <script src="../js/data/order-data.js"></script>
+    <script src="../js/data/shared-schedule-data.js"></script>
+    <script src="../js/data/batch-history-data.js"></script>
+    <script src="../js/data/ibaraki-data.js"></script>
+    
+    <!-- プラントエリア機能別JavaScriptファイル -->
+    <script src="../js/plant-area/screen-navigation.js"></script>
+    <script src="../js/plant-area/production-instruction.js"></script>
+    <script src="../js/plant-area/pouring-volume-table.js"></script>
+    <script src="../js/plant-area/order-table.js"></script>
+    <script src="../js/plant-area/batch-division.js"></script>
+    <script src="../js/plant-area/date-cell-handler.js"></script>
+    <script src="../js/plant-area/utils.js"></script>
+    <script src="../js/plant-area/order-modal.js"></script>
+    <script src="../js/plant-area/empty-order-modal.js"></script>
+    <script src="../js/plant-area/delete-order-modal.js"></script>
+    
+    <!-- メインファイル -->
+    <script src="plant-control.js"></script>
+</body>
+</html>
+

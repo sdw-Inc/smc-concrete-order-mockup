@@ -1,0 +1,228 @@
+/* ========================================
+   モーダル共通スタイル
+   ======================================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    border: 2px solid #000000;
+    border-radius: 8px;
+    width: 450px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 15px;
+    border-bottom: 1px solid #000000;
+}
+
+.modal-header h2 {
+    font-weight: bold;
+    margin: 0;
+}
+
+.modal-body {
+    padding: 10px 20px;
+}
+
+.modal-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 6px 0;
+}
+
+/* 空注文追加モーダル用の行スタイル */
+#empty-order-modal .modal-info-row {
+    justify-content: flex-start;
+    align-items: center;
+}
+
+#empty-order-modal .modal-info-row .modal-label {
+    margin-right: 15px;
+    flex-shrink: 0;
+}
+
+.modal-label {
+    font-weight: bold;
+    width: 120px;
+    text-align: right;
+    margin-right: 15px;
+}
+
+.modal-value {
+    flex: 1;
+    text-align: left;
+    padding-left: 10px;
+    width: 200px;
+}
+
+.modal-select {
+    flex: 1;
+    padding: 6px 5px;
+    border: 1px solid #000000;
+    font-size: 16px;
+    margin-left: 5px;
+    margin-right: 50px;
+}
+
+.modal-footer {
+    padding: 10px;
+    border-top: 1px solid #000000;
+    display: flex;
+    justify-content: start;
+    gap: 10px;
+}
+
+.modal-btn {
+    padding: 9px 20px;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    border: 1px solid #000000;
+    min-width: 100px;
+    background: white;
+}
+
+.modal-btn:hover {
+    background: #f0f0f0;
+}
+
+/* 空注文追加モーダル用スタイル */
+.modal-input {
+    flex: 0 0 150px;
+    padding: 6px 5px;
+    border: 1px solid #000000;
+    font-size: 16px;
+    margin-left: 5px;
+    text-align: left;
+}
+
+.modal-input-with-unit {
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+}
+
+.modal-input-with-unit .modal-input {
+    margin-left: 0;
+    margin-right: 5px;
+    flex: 0 0 150px;
+    text-align: left;
+}
+
+.modal-unit {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.modal-btn:disabled {
+    background: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+
+.modal-btn:disabled:hover {
+    background: #cccccc;
+}
+
+/* 注文追加ボタンのdisabled時のスタイル（parent-btn batch-selection-buttonを参考） */
+.modal-confirm-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #ffffff;
+    color: #000000;
+}
+
+.modal-confirm-btn:disabled:hover {
+    opacity: 0.5;
+    background: #ffffff;
+}
+
+/* 練り指示変更モーダル用スタイル */
+.change-mixing-instruction-modal .modal-body .modal-info-row .modal-label {
+    width: 150px;
+}
+
+.change-modal-concrete-row {
+    justify-content: flex-start !important;
+    align-items: center !important;
+}
+
+.change-modal-concrete-row .modal-input-with-unit {  
+    gap: 5px;
+}
+
+.change-mixing-instruction-modal .modal-body .modal-info-row .modal-input-with-unit .modal-value {
+    width: auto;
+    padding-left: 0;
+}
+
+.modal-arrow {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin: 0 10px;
+}
+
+#change-modal-concrete-input {
+    flex: 0 0 80px;
+    width: 80px;
+    text-align: center;
+}
+
+.change-modal-change-request-row {
+    justify-content: flex-start !important;
+    align-items: center !important;
+}
+
+.change-modal-change-request-row .modal-label {
+    width: 150px;
+}
+
+.change-modal-change-request-row .modal-value {
+    flex: 0 0 auto;
+    width: auto !important;
+    padding-left: 5px;
+    margin-right: 5px;
+}
+
+/* 練り上がり後変更モーダル用スタイル */
+.change-after-mixing-modal {
+    width: 580px;
+}
+
+#change-after-mixing-modal .modal-body .modal-info-row .modal-label {
+    width: 150px;
+}
+
+#change-after-mixing-modal .modal-info-row {
+    justify-content: flex-start !important;
+    align-items: center !important;
+}
+
+#change-after-mixing-modal .modal-input-with-unit {  
+    gap: 5px;
+}
+
+#change-after-mixing-modal .modal-body .modal-info-row .modal-input-with-unit .modal-value {
+    width: auto;
+    padding-left: 0;
+}
+

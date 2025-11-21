@@ -1,0 +1,101 @@
+/* ========================================
+   ログイン画面スタイル
+   ======================================== */
+#login-screen {
+    justify-content: center;
+    align-items: center;
+    background: #ffffff;
+    position: relative;
+}
+
+.login-title {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: #000000;
+    font-size: 18px;
+    margin: 0;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #000000;
+}
+
+.form-group input {
+    padding: 12px;
+    border: 2px solid #000000;
+    border-radius: 6px;
+    font-size: 16px;
+    width: 300px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #000000;
+}
+
+.login-btn {
+    background: #ffffff;
+    color: #000000;
+    padding: 12px 32px;
+    border: 2px solid #000000;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    width: auto;
+    margin-top: 20px;
+}
+
+.login-btn:hover {
+    background: #f0f0f0;
+}
+
+/* ========================================
+   ログイン情報表示（右下）
+   ======================================== */
+.login-info {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    text-align: left;
+    color: #000000;
+    font-size: 14px;
+}
+
+.info-section {
+    margin-bottom: 15px;
+}
+
+.info-section:last-child {
+    margin-bottom: 0;
+}
+
+.info-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.info-label {
+    font-size: 12px;
+    margin-bottom: 3px;
+}
+
+.info-value {
+    font-size: 13px;
+}
+

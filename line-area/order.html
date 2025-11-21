@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>コンクリートオーダーシステム - ラインエリア - 注文</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/order.css">
+    <link rel="stylesheet" href="css/modals.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 注文画面 -->
+        <div id="order-screen" class="screen active">
+            <div class="header">
+                <div class="header-left">
+                    <select class="screen-selector">
+                        <option value="production-instruction">生産指示</option>
+                        <option value="batch-info">バッチ情報</option>
+                    </select>
+                    <span class="date-info"></span>
+                    <select class="line-selector">
+                        <option value="A">栃木_建築A北</option>
+                        <option value="B">栃木_建築A北</option>
+                        <option value="A">茨城_Aライン</option>
+                        <option value="B">茨城_B1ライン</option>
+                    </select>
+                    <span class="line-info"> 5P 30.015㎥</span>
+                </div>
+                <div class="header-right">
+                    <button class="qr-clear-btn" style="display: none;">読取解除</button>
+                    <button class="qr-btn">QR読取</button>
+                    <select class="filter-selector">
+                        <option value="all">全ての製品を表示</option>
+                        <option value="incomplete">打設未完了製品</option>
+                        <option value="completed">打設完了済製品</option>
+                    </select>
+                    <button class="sort-btn">打設順変更</button>
+                    <button class="logout-btn">ログアウト</button>
+                </div>
+            </div>
+
+            <div class="order-button-container">
+                <button class="order-btn">注文</button>
+            </div>
+
+            <div class="main-content">
+                <div class="order-grid" id="order-grid">
+                    <!-- 注文アイテムはJavaScriptで動的に生成されます -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 数量変更依頼モーダル -->
+        <div id="change-request-modal" class="change-request-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>数量変更依頼</h3>
+                </div>
+                <div class="change-info">
+                    <div class="change-target">○○駅西口再開発 36N</div>
+                    <div class="quantity-change-container">
+                        <div class="quantity-change">
+                            <label class="before-change-label">変更前の量</label>
+                            <span>1.00m³</span>
+                        </div>
+                        <div class="arrow">→</div>
+                        <div class="quantity-change">
+                            <label>変更後の量</label>
+                            <div class="input-with-unit">
+                                <input type="text" placeholder="0.00">
+                                <span class="unit">m³</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-cancel-btn change-request-cancel-btn">キャンセル</button>
+                    <button class="modal-ok-btn modal-change-request-btn">変更依頼</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 注文数量入力モーダル -->
+        <div id="quantity-input-modal" class="quantity-input-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>注文数量入力</h3>
+                </div>
+                
+                <div class="quantity-input-content">
+                    <div class="quantity-input-panel">
+                        <div class="project-info-header">
+                            <span class="project-info-name">○○駅西口再開発</span>
+                            <span class="concrete-info">36N 1.348㎥</span>
+                        </div>
+                        
+                        <div class="total-quantity-container">
+                            <div class="total-quantity">
+                                <label>総量 <span class="required">*</span></label>
+                                <input type="text" id="total-quantity-input" placeholder="注文する総量">
+                            </div>
+                            <div class="batch-division-radio">
+                                <label class="radio-label">
+                                    <label>バッチ割</label>
+                                    <input type="radio" name="batch-division" value="auto" id="batch-division-auto" checked>
+                                    <span class="radio-text">おまかせ</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="batch-division" value="manual" id="batch-division-manual">
+                                    <span class="radio-text">指定</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="batch-division-container">
+                            <div class="batch-inputs">
+                                <div class="batch-section-header">バッチ割</div>
+                                <div class="batch-input-container" id="batch-inputs-section">
+                                    <div class="batch-mode-selection">
+                                        <label class="radio-label">
+                                            <input type="radio" name="batch-mode" value="auto" id="batch-mode-auto" checked>
+                                            <span class="radio-text">自動分割</span>
+                                        </label>
+                                        <label class="radio-label">
+                                            <input type="radio" name="batch-mode" value="manual" id="batch-mode-manual">
+                                            <span class="radio-text">手動入力</span>
+                                        </label>
+                                    </div>
+                                    <div class="batch-size-input-container">
+                                        <label>1バッチ量</label>
+                                        <input type="text" id="batch-size-input" placeholder="1バッチ量">
+                                        <button class="batch-add-btn" id="batch-add-btn">追加</button>
+                                    </div>
+                                    <div class="remaining-quantity">
+                                        <label>残り</label>
+                                        <span id="remaining-quantity-display">-</span>
+                                    </div>
+                                    <div class="batch-table-container">
+                                        <table class="batch-table" id="batch-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>バッチNo</th>
+                                                    <th>㎥数</th>
+                                                    <th>削除</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="batch-table-body">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="memo-input">
+                                <label>メモ</label>
+                                <textarea id="memo-textarea" placeholder="メモ"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-cancel-btn quantity-input-cancel-btn">キャンセル</button>
+                    <button class="modal-ok-btn order-btn">注文</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 打設完了確認モーダル -->
+        <div id="completion-modal" class="completion-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h3>打設完了確認</h3>
+                </div>
+                
+                <div class="completion-info">
+                    <div class="info-item">
+                        <label>型枠番号:</label>
+                        <span>No.03</span>
+                    </div>
+                    <div class="info-item">
+                        <label>工事名:</label>
+                        <span>○○駅西口再開発</span>
+                    </div>
+                    <div class="info-item">
+                        <label>階数:</label>
+                        <span>20F</span>
+                    </div>
+                    <div class="info-item">
+                        <label>製品番号:</label>
+                        <span>20C-Xa1Ya1</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-cancel-btn">キャンセル</button>
+                    <button class="modal-ok-btn">打設完了</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- データファイル -->
+    <script src="../js/data/shared-schedule-data.js"></script>
+    <script src="../js/data/order-data.js"></script>
+    <script src="../js/data/batch-data.js"></script>
+
+    <!-- ラインエリア機能別JavaScriptファイル -->
+    <script src="../js/line-area/screen-navigation.js"></script>
+    <script src="../js/line-area/modal-handler.js"></script>
+    <script src="../js/line-area/qr-scanner.js"></script>
+    <script src="../js/line-area/order-management.js"></script>
+    
+    <!-- メインファイル -->
+    <script src="line-area.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,202 @@
+/* ========================================
+   バッチ履歴画面スタイル
+   ======================================== */
+/* バッチ履歴画面専用スタイル */
+.history-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    border: 2px solid #000000;
+    margin: 10px;
+    max-width: 1200px;
+}
+
+/* 検索欄スタイル */
+.history-controls .control-row, .history-controls .control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.right-aligned-label {
+    text-align: right;
+    width: 110px;
+    display: inline-block;
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+.wide-select {
+    width: 500px;
+}
+
+.control-group input, .control-group select {
+    padding: 8px 12px;
+    border: 2px solid #000000;
+    font-size: 18px;
+}
+
+.control-group input:focus, .control-group select:focus {
+    outline: none;
+    border-color: #000000;
+}
+
+.button-group {
+    margin-left: auto;
+    align-self: flex-end;
+}
+
+.search-btn, .clear-btn {
+    height: 40px;
+    padding: 5px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid #000000;
+}
+
+.search-btn {
+    background: white;
+}
+
+.search-btn:hover {
+    background: #f0f0f0;
+}
+
+.clear-btn {
+    border: none;
+    background: #808080;
+    color: white;
+}
+
+.clear-btn:hover {
+    background: #666666;
+}
+
+/* テーブルスタイル */
+.history-table-container {
+    padding-top: 10px;
+    border-top: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+    height: calc(100vh - 260px); /* 画面の高さからヘッダーとコントロール部分を引いた高さ */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.history-table thead {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.history-table tbody {
+    display: block;
+    overflow-y: scroll;
+    overflow-x: auto;
+    height: calc(100% - 40px); /* theadの高さを引く */
+    width: 100%;
+}
+
+.history-table thead tr,
+.history-table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+.history-table th {
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    text-align: center;
+    padding: 3px;
+    border: 1px solid #000000;
+    background-color: #fff;
+    z-index: 10;
+}
+
+.history-table td {
+    text-align: left;
+    padding: 8px;
+    border: 1px solid #000000;
+    border-top: none;
+}
+
+/* 各列の幅を%で指定 */
+.history-table th:nth-child(1),
+.history-table td:nth-child(1) {
+    width: 4%; /* バッチNo */
+}
+
+.history-table th:nth-child(2),
+.history-table td:nth-child(2) {
+    width: 8%; /* ライン */
+}
+
+.history-table th:nth-child(3),
+.history-table td:nth-child(3) {
+    width: 12%; /* 物件略称 */
+}
+
+.history-table th:nth-child(4),
+.history-table td:nth-child(4) {
+    width: 5%; /* 階数 */
+}
+
+.history-table th:nth-child(5),
+.history-table td:nth-child(5) {
+    width: 10%; /* 製品番号 */
+}
+
+.history-table th:nth-child(6),
+.history-table td:nth-child(6) {
+    width: 5%; /* 型枠No */
+}
+
+.history-table th:nth-child(7),
+.history-table td:nth-child(7) {
+    width: 5%; /* 強度 */
+}
+
+.history-table th:nth-child(8),
+.history-table td:nth-child(8) {
+    width: 6%; /* 総量 */
+}
+
+.history-table th:nth-child(9),
+.history-table td:nth-child(9) {
+    width: 8%; /* コンクリート量(練り量) */
+}
+
+.history-table th:nth-child(10),
+.history-table td:nth-child(10) {
+    width: 6%; /* 調合No */
+}
+
+.history-table th:nth-child(11),
+.history-table td:nth-child(11) {
+    width: 12%; /* 注文日時 */
+}
+
+.history-table th:nth-child(12),
+.history-table td:nth-child(12) {
+    width: 12%; /* 練り上がり日時 */
+}
+
+.history-table th:nth-child(13),
+.history-table td:nth-child(13) {
+    width: 4%; /* ミキサ */
+}
+

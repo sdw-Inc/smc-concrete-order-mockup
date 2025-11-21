@@ -1,0 +1,149 @@
+/* ========================================
+   プラントエリア共通スタイル
+   ======================================== */
+@import url('../../common/css/base.css');
+
+/* ========================================
+   ヘッダー
+   ======================================== */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 8px 12px;
+    border-top: 2px solid #000000;
+    border-bottom: 2px solid #000000;
+    width: 100%;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.header-left, .header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.screen-selector, .factory-selector, .batcher-filter-selector {
+    padding: 6px 20px;
+    border: 1px solid #000000;
+    background: white;
+    font-size: 17px;
+}
+
+.back-btn {
+    background: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 0.6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-arrow {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.date-selector {
+    padding: 6px 10px;
+    border: 1px solid #000000;
+    font-size: 15px;
+}
+
+/* ========================================
+   共通ボタンスタイル
+   ======================================== */
+.btn {
+    border: 1px solid #000000;
+    border-radius: 50px;
+    padding: 4px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+    background: #f0f0f0;
+}
+
+/* 生産指示画面・バッチ履歴画面のログアウトボタン */
+#production-instruction-screen .logout-btn,
+#batch-history-screen .logout-btn {
+    padding: 4px 12px;
+    border: none;
+    background: transparent;
+    color: #000000;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#production-instruction-screen .logout-btn:hover,
+#batch-history-screen .logout-btn:hover {
+    background: transparent;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .header-left, .header-right {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .history-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .history-controls .control-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    
+    .control-group {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .history-table {
+        min-width: 800px;
+    }
+}
+
+@media (max-width: 480px) {
+    .app-container {
+        padding: 10px;
+    }
+    
+    .screen {
+        padding: 5px;
+    }
+    
+    .login-container {
+        padding: 20px;
+    }
+    
+    .menu-item {
+        padding: 20px;
+    }
+    
+    .quality-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+}
+

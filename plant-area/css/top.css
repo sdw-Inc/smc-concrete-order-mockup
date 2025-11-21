@@ -1,0 +1,81 @@
+/* ========================================
+   TOP画面スタイル
+   ======================================== */
+/* TOP画面のログアウトボタン */
+#top-screen .logout-btn {
+    padding: 7px 16px;
+    background: #000000;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#top-screen .logout-btn:hover {
+    background: #333333;
+}
+
+.middle-section, .bottom-section {
+    margin-top: 40px;
+}
+
+.top-section {
+    margin-top: 70px;
+}
+
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* TOP画面のボタンスタイル */
+.button-base {
+    padding: 17px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: not-allowed;
+    min-height: 50px;
+    text-align: center;
+}
+
+.white-button {
+    background: white;
+    border: 2px solid #000000;
+    color: #000000;
+}
+
+.white-button.active {
+    cursor: pointer;
+}
+
+.gray-button {
+    background: rgb(116, 116, 116);
+    color: #ffffff;
+}
+
+.link-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.link-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.blue-link {
+    color: #000000;
+    text-decoration: underline;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 0;
+    cursor: not-allowed;
+}
+

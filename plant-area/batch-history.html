@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>コンクリートオーダーシステム - プラント操作室 - バッチ履歴</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/batch-history.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- バッチ履歴画面 -->
+        <div id="batch-history-screen" class="screen active">
+            <div class="header">
+                <div class="header-left">
+                    <select class="screen-selector">
+                        <option value="production-instruction">生産指示</option>
+                        <option value="batch-history" selected>バッチ履歴</option>
+                    </select>
+                    <select class="factory-selector">
+                        <option value="tochigi-factory">栃木工場</option>
+                        <option value="ibaraki-factory">茨城工場</option>
+                    </select>
+                </div>
+                <div class="header-right">
+                    <button class="logout-btn">ログアウト</button>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <div class="history-controls">
+                    <div class="control-row">
+                        <div class="control-group">
+                            <label class="right-aligned-label">生産指示書日付</label>
+                            <input type="date" id="start-date" value="2025-10-01">
+                            <span>～</span>
+                            <input type="date" id="end-date" value="2025-11-30">
+                        </div>
+                        <div class="control-group">
+                            <label class="right-aligned-label">ライン</label>
+                            <select id="line-select">
+                                <option value="">全て</option>
+                                <option value="Aライン">Aライン</option>
+                                <option value="B1ライン">B1ライン</option>
+                                <option value="B2ライン">B2ライン</option>
+                                <option value="C1ライン">C1ライン</option>
+                                <option value="C2ライン">C2ライン</option>
+                                <option value="Dライン">Dライン</option>
+                            </select>
+                        </div>
+                        <div class="control-group">
+                            <label class="right-aligned-label">製品番号</label>
+                            <input type="text" id="material-input" placeholder="製品番号">
+                        </div>
+                    </div>
+                    <div class="control-row">
+                        <div class="control-group">
+                            <label class="right-aligned-label">物件略称</label>
+                            <select id="project-select" class="wide-select">
+                                <option value="">全て</option>
+                                <!-- オプションはJavaScriptで動的に生成されます -->
+                            </select>
+                        </div>
+                        <div class="control-group button-group">
+                            <button class="search-btn">検索</button>
+                            <button class="clear-btn">クリア</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="history-table-container">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>バッチ<br>No</th>
+                                <th>ライン</th>
+                                <th>物件略称</th>
+                                <th>階数</th>
+                                <th>製品番号</th>
+                                <th>型枠No</th>
+                                <th>強度</th>
+                                <th>総量</th>
+                                <th>コンクリート量<br>(練り量)</th>
+                                <th>調合No</th>
+                                <th>注文日時</th>
+                                <th>練り上がり日時</th>
+                                <th>ミキサ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- データはJavaScriptで動的に生成されます -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- データファイル -->
+    <script src="../js/data/order-data.js"></script>
+    <script src="../js/data/project-data.js"></script>
+    <script src="../js/data/batch-history-data.js"></script>
+    <script src="../js/data/ibaraki-data.js"></script>
+    
+    <!-- プラントエリア機能別JavaScriptファイル -->
+    <script src="../js/plant-area/screen-navigation.js"></script>
+    <script src="../js/plant-area/batch-history-table.js"></script>
+    
+    <!-- メインファイル -->
+    <script src="plant-control.js"></script>
+</body>
+</html>
+

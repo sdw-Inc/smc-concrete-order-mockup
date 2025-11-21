@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>コンクリートオーダーシステム - ログイン</title>
+    <link rel="stylesheet" href="common/css/base.css">
+    <link rel="stylesheet" href="common/css/login.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- ログイン画面 -->
+        <div id="login-screen" class="screen active">
+            <h1 class="login-title">コンクリートオーダーシステム</h1>
+            <form class="login-form" id="login-form">
+                <div class="form-group">
+                    <label for="user-id">従業員コード</label>
+                    <input type="text" id="user-id" name="user-id" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">パスワード</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="login-btn">ログイン</button>
+            </form>
+            <div class="login-info">
+                <div class="info-section">
+                    <div class="info-title">ラインエリアログイン（栃木）</div>
+                    <div class="info-label">ユーザID / パスワード</div>
+                    <div class="info-value">000 / 000</div>
+                </div>
+                <div class="info-section">
+                    <div class="info-title">ラインエリアログイン（茨城）</div>
+                    <div class="info-label">ユーザID / パスワード</div>
+                    <div class="info-value">111 / 111</div>
+                </div>
+                <div class="info-section">
+                    <div class="info-title">プラントエリアログイン</div>
+                    <div class="info-label">ユーザID / パスワード</div>
+                    <div class="info-value">222 / 222</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ログイン処理
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userId = document.getElementById('user-id').value;
+            const password = document.getElementById('password').value;
+            
+            // ログイン認証
+            if (userId === '000' && password === '000') {
+                // ラインエリアの生産指示画面に遷移（栃木_建築A北固定）
+                localStorage.setItem('userId', '000');
+                window.location.href = 'line-area/production-instruction.html';
+            } else if (userId === '111' && password === '111') {
+                // ラインエリアの生産指示画面に遷移（茨城_B1ライン初期選択、B1/B2のみ選択可能）
+                localStorage.setItem('userId', '111');
+                window.location.href = 'line-area/production-instruction.html';
+            } else if (userId === '222' && password === '222') {
+                // プラントエリアの生産指示画面に遷移
+                localStorage.removeItem('userId');
+                window.location.href = 'plant-area/production-instruction.html';
+            } else {
+                // ログイン失敗
+                alert('ユーザIDまたはパスワードが正しくありません。');
+            }
+        });
+    </script>
+</body>
+</html>

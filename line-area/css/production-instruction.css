@@ -1,0 +1,892 @@
+/* ========================================
+   生産指示画面スタイル
+   ======================================== */
+#production-instruction-screen {
+    max-width: 100% !important;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+}
+
+#production-instruction-screen .header {
+    margin: 0;
+    width: 100%;
+    position: relative;
+    left: 0;
+    transform: none;
+    height: auto;
+}
+
+.production-instruction-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr 1.2fr 0.9fr;
+    grid-template-rows: 0.8fr 0.3fr 1.9fr 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    height: calc(100vh - 60px);
+    padding: 10px;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* エリアヘッダー */
+.area-header {
+    font-size: 17px;
+    font-weight: bold;
+    border-bottom: 1px solid #000000;
+    padding: 4px;
+    text-align: center;
+    background-color: rgb(210, 210, 210);
+}
+
+/* エリアボタン */
+.area-btn {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid #000000;
+    border-radius: 25px;
+    padding: 12px 15px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* 製造予定エリア */
+.production-schedule-area {
+    grid-area: 1 / 1 / 5 / 2;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #000000;
+    overflow: hidden;
+}
+
+.schedule-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#production-instruction-screen .schedule-header {
+    display: flex;
+    height: 35px;
+    font-size: 17px;
+    background: #f0f0f0;
+}
+
+.date-label {
+    width: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.date-cells {
+    display: flex;
+    flex: 1;
+}
+
+.date-column {
+    border-left: 1px solid #000000;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+#production-instruction-screen .schedule-body {
+    flex: 1;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    position: relative;
+    scrollbar-width: auto;
+    -ms-overflow-style: scrollbar;
+}
+
+/* スクロールバーのスタイル（共通） */
+#production-instruction-screen .schedule-body::-webkit-scrollbar,
+.selected-products-list::-webkit-scrollbar,
+#production-instruction-screen .batch-info-table-wrapper::-webkit-scrollbar,
+.batch-table-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+#production-instruction-screen .schedule-body::-webkit-scrollbar-track,
+.selected-products-list::-webkit-scrollbar-track,
+#production-instruction-screen .batch-info-table-wrapper::-webkit-scrollbar-track,
+.batch-table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#production-instruction-screen .schedule-body::-webkit-scrollbar-thumb,
+.selected-products-list::-webkit-scrollbar-thumb,
+#production-instruction-screen .batch-info-table-wrapper::-webkit-scrollbar-thumb,
+.batch-table-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+#production-instruction-screen .schedule-body::-webkit-scrollbar-thumb:hover,
+.selected-products-list::-webkit-scrollbar-thumb:hover,
+#production-instruction-screen .batch-info-table-wrapper::-webkit-scrollbar-thumb:hover,
+.batch-table-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.project-name {
+    font-size: 16px;
+    padding: 5px;
+    background: #f8f8f8;
+    border-top: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+    position: sticky;
+    top: 0px;
+    z-index: 5;
+}
+
+.schedule-table {
+    border-bottom: 1px solid #ddd;
+}
+
+#production-instruction-screen .schedule-row {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    min-height: 45px;
+}
+
+.row-label {
+    width: 110px;
+    padding: 2px;
+    border-right: 1px solid #000000;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.line-name {
+    margin-bottom: 7px;
+}
+
+.date-cell {
+    flex: 1;
+    border-right: 1px solid #ddd;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.3;
+    position: relative;
+}
+
+.date-cell.empty {
+    background: white;
+    cursor: default;
+}
+
+.date-cell.orange {
+    background: #ffa500;
+}
+
+.date-cell.yellow {
+    background: #ffff00;
+}
+
+.date-cell.pink {
+    background: #ffc0cb;
+}
+
+.date-cell.light-yellow {
+    background: #ffffe0;
+}
+
+.date-cell.selected {
+    border: 3px solid #0066cc !important;
+}
+
+/* date-cell内の.unit要素には他の.unitスタイルを適用しない */
+#production-instruction-screen .date-cell .unit {
+    font-weight: normal;
+    font-size: inherit;
+    width: auto;
+}
+
+.selection-form {
+    height: 55px;
+    border-top: 1px solid #000000;
+    padding: 3px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.clear-selection-btn {
+    background: #ffffff;
+    border: 1px solid #000000;
+    padding: 5px 20px;
+    border-radius: 25px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* 注文明細エリア */
+.order-details-area {
+    grid-area: 1 / 2 / 3 / 4;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #000000;
+    overflow: hidden;
+}
+
+.order-details-table-container {
+    flex: 1;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    position: relative;
+    scrollbar-width: auto;
+    scrollbar-gutter: stable;
+    -ms-overflow-style: scrollbar;
+}
+
+.order-details-table-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.order-details-table-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.order-details-table-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.order-details-table-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.order-details-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    text-align: center;
+    table-layout: fixed;
+}
+
+.order-details-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #f0f0f0;
+    box-shadow: 0 0.5px 0 #000;
+}
+
+.order-details-table th {
+    background-color: #f0f0f0;
+    font-weight: normal;
+    padding: 6px 4px;
+    border: 1px solid rgb(202, 202, 202);
+    border-bottom: 1px solid #000000;
+    border-top: none;
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 0.5px 0 #000;
+    background-color: #f0f0f0 !important;
+}
+
+.order-details-table td {
+    padding: 4px 4px;
+    border: 1px solid rgb(202, 202, 202);
+    vertical-align: middle;
+}
+
+.order-details-table tbody tr {
+    background-color: #ffffff;
+}
+
+.order-details-table tbody tr.selected {
+    background-color: #90EE90;
+}
+
+/* 列幅の調整 */
+.order-details-table th:nth-child(1), .order-details-table td:nth-child(1) { 
+    width: 20%; 
+    border-left: none; 
+} /* 注文時刻 */
+.order-details-table th:nth-child(2), .order-details-table td:nth-child(2) { width: 30%; } /* 物件略称 */
+.order-details-table th:nth-child(3), .order-details-table td:nth-child(3) { width: 30%; } /* 製品番号 */
+.order-details-table th:nth-child(4), .order-details-table td:nth-child(4) { width: 20%; } /* 強度 */
+
+/* CON注文選択製品エリア */
+.selected-products-area {
+    grid-area: 3 / 2 / 5 / 3;
+    display: flex;
+    flex-direction: column;
+}
+
+.selection-confirm-btn {
+    margin-bottom: 10px;
+}
+
+.selection-confirm-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.selected-products-area-content {
+    flex: 1;
+    border: 1px solid #000000;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.selected-products-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.selected-product-input {
+    display: flex;
+    flex-direction: column;
+    font-size: 17px;
+    align-items: center;
+}
+
+.selected-product-input .strength-display-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 45px;
+    height: 45px;
+    padding: 4px;
+}
+
+.selected-product-input .mixing-no-display {
+    font-size: 17px;
+    margin-left: 10px;
+}
+
+.selected-product-input #selected-unit-display {
+    padding: 5px;
+    font-size: 17px;
+    text-align: center;
+    border: 1px solid #000000;
+    width: 80%;
+    margin-bottom: 8px;
+}
+
+.selected-products-list {
+    flex: 1;
+    border-top: 1px solid #000000;
+    overflow-y: scroll;
+    scrollbar-width: auto;
+    -ms-overflow-style: scrollbar;
+}
+
+.selected-product-item {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+}
+
+.selected-product-item .product-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    border-right: 1px solid #ddd;
+}
+
+.selected-product-item .product-details {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    text-align: center;
+    line-height: 1.4;
+    font-size: 16px;
+    width: 100%;
+}
+
+/* 注文内容入力エリア */
+.order-input-area {
+    grid-area: 3 / 3 / 5 / 4;
+    display: flex;
+    flex-direction: column;
+}
+
+.order-input-header {
+    border: 1px solid #000000;
+}
+
+.order-details-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.design-info-section {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #000000;
+    border-top: none;
+    flex-shrink: 0;
+}
+
+.design-info-section .detail-row {
+    text-align: center;
+    gap: 0;
+    height: 66px;
+}
+
+.design-info-section .detail-row label {
+    background: #f0f0f0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.design-info-section .detail-value {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    border-left: 1px solid #000;
+}
+
+.design-info-section .detail-value .strength-display-row {
+    border-bottom: 1px solid #000;
+    width: 100%;
+    padding: 2px;
+    min-height: 33px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.design-info-section .detail-value .unit-display-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    min-height: 30px;
+}
+
+.design-info-section .detail-value .unit-display-row span {
+    flex: 1;
+    text-align: center;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+}
+
+.design-info-section .detail-value .unit-display-row span:first-child {
+    border-right: 1px solid #000;
+}
+
+.order-info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 5px;
+    border: 1px solid #000000;
+    flex-shrink: 0;
+}
+
+.detail-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.change-field {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #000000;
+}
+
+.change-field:last-child {
+    border-bottom: none;
+}
+
+.detail-row label,
+.change-field label {
+    min-width: 120px;
+    font-size: 17px;
+    background: #f0f0f0;
+}
+
+.change-field label {
+    height: 100%;
+    text-align: center;
+    padding: 3px;
+    border-right: 1px solid #000000;
+}
+
+.change-field span {
+    flex: 1;
+    font-size: 16px;
+    padding: 2px;
+    text-align: center;
+    border: none;
+    display: block;
+}
+
+.change-fields {
+    display: flex;
+    flex-direction: column;
+}
+
+/* バッチ選択セクション */
+.batch-select-section {
+    margin-top: 5px;
+    border: 1px solid #000000;
+    flex-shrink: 0;
+}
+
+.batch-select-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.batch-select-table td {
+    border-right: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+    padding: 5px 3px;
+    text-align: center;
+    vertical-align: middle;
+    background: white;
+}
+
+.batch-select-table td:last-child {
+    border-right: none;
+}
+
+.batch-select-table td.batch-select-label {
+    background: #f0f0f0;
+}
+
+.batch-select-label {
+    vertical-align: middle;
+    font-size: 17px;
+    width: 120px;
+}
+
+.batch-select-table td:not(.batch-select-label) {
+    font-size: 17px;
+}
+
+.checkbox-cell {
+    text-align: center;
+    vertical-align: middle;
+    height: 100%;
+    padding: 2px 3px;
+    line-height: 1;
+}
+
+.batch-select-table input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #0400ff;
+    vertical-align: middle;
+    margin: 0;
+}
+
+/* batch-radio-buttonのスタイル */
+#production-instruction-screen .batch-radio-button input[type="radio"] {
+    width: 18px !important;
+    height: 18px !important;
+    cursor: pointer;
+    accent-color: #0000ff;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    border: 2px solid #000000 !important;
+    border-radius: 50% !important;
+    background-color: #ffffff !important;
+    position: relative;
+}
+
+#production-instruction-screen .batch-radio-button input[type="radio"]:checked {
+    accent-color: #0000ff !important;
+    background-color: #ffffff !important;
+    border-color: #0000ff !important;
+}
+
+#production-instruction-screen .batch-radio-button input[type="radio"]:checked::after {
+    content: '' !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #0000ff !important;
+}
+
+#production-instruction-screen .batch-radio-button input[type="radio"][disabled] {
+    opacity: 0.6;
+    cursor: default;
+    pointer-events: none;
+}
+
+#production-instruction-screen .batch-radio-button input[type="radio"][disabled]:checked {
+    border-color: #0000ff !important;
+    opacity: 1 !important;
+}
+
+#production-instruction-screen .batch-radio-button input[type="radio"][disabled]:checked::after {
+    content: '' !important;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #0000ff !important;
+    opacity: 1 !important;
+}
+
+/* バッチ情報テーブル（生産指示画面内） */
+#production-instruction-screen .batch-info-section {
+    flex: 1;
+    margin-top: 5px;
+    border: 1px solid #000000;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+}
+
+#production-instruction-screen .batch-info-section > .batch-info-table {
+    flex-shrink: 0;
+    width: calc(100% - 8px);
+    margin-right: 8px;
+}
+
+#production-instruction-screen .batch-info-table-wrapper {
+    flex: 1;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scrollbar-width: auto;
+    scrollbar-gutter: stable;
+    -ms-overflow-style: scrollbar;
+    min-height: 0;
+}
+
+#production-instruction-screen .batch-info-table-wrapper .batch-info-table {
+    border-top: none;
+}
+
+#production-instruction-screen .batch-info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    table-layout: fixed;
+    display: table;
+}
+
+#production-instruction-screen .batch-info-table th,
+#production-instruction-screen .batch-info-table td {
+    border: 1px solid #000000;
+    border-top: none;
+    padding: 5px;
+    text-align: center;
+    background: white;
+}
+
+#production-instruction-screen .batch-info-table td:first-child,
+#production-instruction-screen .batch-info-table th:first-child  {
+    border-left: none;
+    width: 120px;
+}
+
+#production-instruction-screen .batch-info-table th {
+    border-top: none;
+}
+
+#production-instruction-screen .batch-info-table th:last-child,
+#production-instruction-screen .batch-info-table td:last-child {
+    border-right: none;
+}
+
+#production-instruction-screen .batch-info-table th {
+    background: #d2d2d2;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+#production-instruction-screen .batch-info-table .status-shipped {
+    color: #ff0000;
+}
+
+#production-instruction-screen .batch-info-table .status-mixing {
+    color: #0000ff;
+}
+
+#production-instruction-screen .batch-info-table .status-requested {
+    color: #000000;
+}
+
+#production-instruction-screen .batch-info-table .status-stopped {
+    color: #000000;
+}
+
+/* 依頼中行のクリック可能スタイル */
+#production-instruction-screen .batch-info-table tr.clickable-requested {
+    cursor: pointer;
+}
+
+#production-instruction-screen .batch-info-table tr.clickable-requested:hover {
+    background-color: #f0f0f0;
+}
+
+/* クリック後の緑色背景 */
+#production-instruction-screen .batch-info-table tr.selected-requested {
+    background-color: #90EE90 !important;
+}
+
+#production-instruction-screen .batch-info-table tr.selected-requested td {
+    background-color: #90EE90 !important;
+}
+
+/* ライン当日予定数量エリア */
+.line-daily-quantity-area {
+    grid-area: 1 / 4 / 2 / 5;
+    display: flex;
+    flex-direction: column;
+}
+
+.line-daily-quantity-header {
+    border: 1px solid #000000;
+}
+
+.quantity-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+}
+
+.quantity-table td {
+    padding: 4px;
+    border: 1px solid #000000;
+    border-top: none;
+    background: white;
+    text-align: center;
+}
+
+.quantity-table td:first-child {
+    background: #f0f0f0;
+    width: 60%;
+}
+
+/* アクションボタンエリア */
+.action-buttons-area {
+    grid-area: 2 / 4 / 5 / 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px  40px;
+    margin-bottom: 40px;
+}
+
+.buttons-area-btn {
+    padding: 20px 0;
+    font-size: 21px;
+    border-radius: 100px;
+}
+
+.buttons-area-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 注文ボタンのdisabledスタイル（注文画面のorder-btnを参考） */
+.order-quantity-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* 生産指示書画面 */
+.production-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 15px 20px;
+    border: 2px solid #000000;
+    margin-bottom: 20px;
+}
+
+.back-btn {
+    padding: 8px 16px;
+    background: #000000;
+    color: white;
+    border: 2px solid #000000;
+    cursor: pointer;
+    font-size: 14px;
+    width: 100%;
+}
+
+.back-btn:hover {
+    background: #333333;
+}
+
+.production-content {
+    flex: 1;
+    background: white;
+    border: 2px solid #000000;
+    padding: 20px;
+    overflow-x: auto;
+}
+
+.production-table {
+    width: 100%;
+}
+
+.line-header {
+    font-size: 18px;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f0f0f0;
+    border: 2px solid #000000;
+}
+
+tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+tr:hover {
+    background: #f0f0f0;
+}
+
