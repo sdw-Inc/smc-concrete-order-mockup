@@ -87,6 +87,7 @@
     white-space: nowrap;
     will-change: transform;
     animation: scrolling 20s linear infinite;
+    animation-fill-mode: both;
 }
 
 .batch-info-group {
@@ -101,10 +102,10 @@
 }
 
 @keyframes scrolling {
-    from {
+    0% {
         transform: translateX(0);
     }
-    to {
+    100% {
         transform: translateX(-50%);
     }
 }

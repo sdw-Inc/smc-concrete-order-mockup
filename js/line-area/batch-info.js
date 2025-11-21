@@ -5,6 +5,54 @@
 // バッチ情報関連の初期化
 function initializeLineAreaBatchInfo() {
     // バッチ情報画面が表示された時の初期化処理
+    // 「18B-10　19B-1　20B-10」のテキストに対して強制的にカルーセル構造を作成
+    setTimeout(() => {
+        const sections = document.querySelectorAll('.batch-info-section');
+        sections.forEach(section => {
+            const textElement = section.querySelector('.batch-info-text');
+            if (textElement && textElement.textContent.includes('18B-10')) {
+                // 既にカルーセル構造がある場合はスキップ
+                if (section.querySelector('.batch-info-carousel')) {
+                    return;
+                }
+                
+                const textContent = textElement.textContent;
+                const textClasses = textElement.className;
+                
+                // カルーセル構造を作成
+                const carousel = document.createElement('div');
+                carousel.className = 'batch-info-carousel';
+                
+                // ラッパー要素を作成（アニメーション用）
+                const wrapper = document.createElement('div');
+                wrapper.className = 'batch-info-wrapper';
+                
+                // 最初のグループを作成
+                const group1 = document.createElement('div');
+                group1.className = 'batch-info-group';
+                const clone1 = document.createElement('div');
+                clone1.className = textClasses;
+                clone1.textContent = textContent;
+                group1.appendChild(clone1);
+                wrapper.appendChild(group1);
+                
+                // 2番目のグループを作成（複製テキストを含む、aria-hidden付き）
+                const group2 = document.createElement('div');
+                group2.className = 'batch-info-group';
+                group2.setAttribute('aria-hidden', 'true');
+                const clone2 = document.createElement('div');
+                clone2.className = textClasses;
+                clone2.textContent = textContent;
+                group2.appendChild(clone2);
+                wrapper.appendChild(group2);
+                
+                carousel.appendChild(wrapper);
+                
+                // 元のテキスト要素をカルーセルで置き換え
+                textElement.parentElement.replaceChild(carousel, textElement);
+            }
+        });
+    }, 100);
 }
 
 // バッチ情報テキストのオーバーフローをチェックする関数
@@ -13,6 +61,48 @@ function checkBatchInfoTextOverflow() {
     batchInfoSections.forEach(section => {
         // セクション内のカルーセル構造またはテキスト要素を取得
         const existingCarousel = section.querySelector('.batch-info-carousel');
+        
+        // 既存のカルーセル構造でラッパーがない場合は、新しい構造に変換
+        if (existingCarousel && !existingCarousel.querySelector('.batch-info-wrapper')) {
+            const oldGroups = existingCarousel.querySelectorAll('.batch-info-group');
+            if (oldGroups.length > 0) {
+                const firstGroup = oldGroups[0];
+                const firstText = firstGroup.querySelector('.batch-info-text');
+                if (firstText) {
+                    const savedTextContent = firstText.textContent;
+                    const savedTextClasses = firstText.className;
+                    
+                    // カルーセルをクリア
+                    existingCarousel.innerHTML = '';
+                    
+                    // 新しいラッパー構造を作成
+                    const newWrapper = document.createElement('div');
+                    newWrapper.className = 'batch-info-wrapper';
+                    
+                    // 最初のグループを作成
+                    const group1 = document.createElement('div');
+                    group1.className = 'batch-info-group';
+                    const clone1 = document.createElement('div');
+                    clone1.className = savedTextClasses;
+                    clone1.textContent = savedTextContent;
+                    group1.appendChild(clone1);
+                    newWrapper.appendChild(group1);
+                    
+                    // 2番目のグループを作成
+                    const group2 = document.createElement('div');
+                    group2.className = 'batch-info-group';
+                    group2.setAttribute('aria-hidden', 'true');
+                    const clone2 = document.createElement('div');
+                    clone2.className = savedTextClasses;
+                    clone2.textContent = savedTextContent;
+                    group2.appendChild(clone2);
+                    newWrapper.appendChild(group2);
+                    
+                    existingCarousel.appendChild(newWrapper);
+                }
+            }
+        }
+        
         const existingText = section.querySelector('.batch-info-text:not([aria-hidden])');
         
         // テキスト要素を取得（カルーセル構造内の場合は最初のテキスト、そうでない場合は直接のテキスト）
@@ -76,6 +166,7 @@ function checkBatchInfoTextOverflow() {
             if (existingCarousel) {
                 const wrapper = existingCarousel.querySelector('.batch-info-wrapper');
                 if (wrapper) {
+                    // ラッパーがある場合は、テキスト内容を更新
                     const groups = wrapper.querySelectorAll('.batch-info-group');
                     groups.forEach(group => {
                         // 各グループ内のテキスト要素を更新
@@ -86,16 +177,43 @@ function checkBatchInfoTextOverflow() {
                         });
                     });
                 } else {
-                    // ラッパーがない場合は、既存の構造を更新
-                    const groups = existingCarousel.querySelectorAll('.batch-info-group');
-                    groups.forEach(group => {
-                        // 各グループ内のテキスト要素を更新
-                        const texts = group.querySelectorAll('.batch-info-text');
-                        texts.forEach(text => {
-                            text.textContent = textContent;
-                            text.className = textClasses;
-                        });
-                    });
+                    // ラッパーがない場合は、新しい構造に変換
+                    const oldGroups = existingCarousel.querySelectorAll('.batch-info-group');
+                    if (oldGroups.length > 0) {
+                        // 既存のグループからテキストを取得
+                        const firstGroup = oldGroups[0];
+                        const firstText = firstGroup.querySelector('.batch-info-text');
+                        const savedTextContent = firstText ? firstText.textContent : textContent;
+                        const savedTextClasses = firstText ? firstText.className : textClasses;
+                        
+                        // カルーセルをクリア
+                        existingCarousel.innerHTML = '';
+                        
+                        // 新しいラッパー構造を作成
+                        const newWrapper = document.createElement('div');
+                        newWrapper.className = 'batch-info-wrapper';
+                        
+                        // 最初のグループを作成
+                        const group1 = document.createElement('div');
+                        group1.className = 'batch-info-group';
+                        const clone1 = document.createElement('div');
+                        clone1.className = savedTextClasses;
+                        clone1.textContent = savedTextContent;
+                        group1.appendChild(clone1);
+                        newWrapper.appendChild(group1);
+                        
+                        // 2番目のグループを作成
+                        const group2 = document.createElement('div');
+                        group2.className = 'batch-info-group';
+                        group2.setAttribute('aria-hidden', 'true');
+                        const clone2 = document.createElement('div');
+                        clone2.className = savedTextClasses;
+                        clone2.textContent = savedTextContent;
+                        group2.appendChild(clone2);
+                        newWrapper.appendChild(group2);
+                        
+                        existingCarousel.appendChild(newWrapper);
+                    }
                 }
             } else {
                 // カルーセル構造を作成
