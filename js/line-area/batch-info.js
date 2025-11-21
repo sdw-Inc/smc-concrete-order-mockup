@@ -74,19 +74,37 @@ function checkBatchInfoTextOverflow() {
         if (textWidth > containerWidth) {
             // 既にカルーセル構造がある場合は、テキスト内容を更新するだけ
             if (existingCarousel) {
-                const groups = existingCarousel.querySelectorAll('.batch-info-group');
-                groups.forEach(group => {
-                    // 各グループ内のテキスト要素を更新
-                    const texts = group.querySelectorAll('.batch-info-text');
-                    texts.forEach(text => {
-                        text.textContent = textContent;
-                        text.className = textClasses;
+                const wrapper = existingCarousel.querySelector('.batch-info-wrapper');
+                if (wrapper) {
+                    const groups = wrapper.querySelectorAll('.batch-info-group');
+                    groups.forEach(group => {
+                        // 各グループ内のテキスト要素を更新
+                        const texts = group.querySelectorAll('.batch-info-text');
+                        texts.forEach(text => {
+                            text.textContent = textContent;
+                            text.className = textClasses;
+                        });
                     });
-                });
+                } else {
+                    // ラッパーがない場合は、既存の構造を更新
+                    const groups = existingCarousel.querySelectorAll('.batch-info-group');
+                    groups.forEach(group => {
+                        // 各グループ内のテキスト要素を更新
+                        const texts = group.querySelectorAll('.batch-info-text');
+                        texts.forEach(text => {
+                            text.textContent = textContent;
+                            text.className = textClasses;
+                        });
+                    });
+                }
             } else {
                 // カルーセル構造を作成
                 const carousel = document.createElement('div');
                 carousel.className = 'batch-info-carousel';
+                
+                // ラッパー要素を作成（アニメーション用）
+                const wrapper = document.createElement('div');
+                wrapper.className = 'batch-info-wrapper';
                 
                 // 最初のグループを作成（元のテキストを含む）
                 const group1 = document.createElement('div');
@@ -97,7 +115,7 @@ function checkBatchInfoTextOverflow() {
                 originalClone.className = textClasses;
                 group1.appendChild(originalClone);
                 
-                carousel.appendChild(group1);
+                wrapper.appendChild(group1);
                 
                 // 2番目のグループを作成（複製テキストを含む、aria-hidden付き）
                 const group2 = document.createElement('div');
@@ -109,7 +127,9 @@ function checkBatchInfoTextOverflow() {
                 duplicateClone.className = textClasses;
                 group2.appendChild(duplicateClone);
                 
-                carousel.appendChild(group2);
+                wrapper.appendChild(group2);
+                
+                carousel.appendChild(wrapper);
                 
                 // 元のテキスト要素をカルーセルで置き換え
                 textElement.parentElement.replaceChild(carousel, textElement);

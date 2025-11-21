@@ -78,27 +78,34 @@
     display: flex;
     overflow: hidden;
     width: 100%;
-    gap: 120px;
+    position: relative;
+    white-space: nowrap;
 }
 
-.batch-info-carousel > * {
-    flex: 0 0 100%;
-}
-
-.batch-info-group {
-    display: flex;
-    gap: 20px;
-    padding-right: 20px;
+.batch-info-wrapper {
+    display: inline-flex;
+    white-space: nowrap;
     will-change: transform;
     animation: scrolling 20s linear infinite;
 }
 
+.batch-info-group {
+    display: inline-flex;
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding-right: 120px;
+}
+
+.batch-info-group[aria-hidden="true"] {
+    display: inline-flex;
+}
+
 @keyframes scrolling {
-    0% {
+    from {
         transform: translateX(0);
     }
-    100% {
-        transform: translateX(-100%);
+    to {
+        transform: translateX(-50%);
     }
 }
 
