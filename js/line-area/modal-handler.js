@@ -416,6 +416,8 @@ function initializeQuantityInputModal() {
     updateRemainingQuantity();
     // バッチ割ラジオボタンの状態を反映
     updateBatchInputsState();
+    // バッチ間隔ラジオボタンの状態を反映
+    updateBatchIntervalInputState();
     // 注文ボタンを無効化
     updateOrderButtonState();
 }
@@ -651,6 +653,17 @@ function resetQuantityInputModal() {
         batchModeAuto.checked = true;
     }
     
+    // バッチ間隔をデフォルトに戻す
+    const batchIntervalAuto = document.getElementById('batch-interval-auto');
+    if (batchIntervalAuto) {
+        batchIntervalAuto.checked = true;
+    }
+    
+    const batchIntervalInput = document.getElementById('batch-interval-input');
+    if (batchIntervalInput) {
+        batchIntervalInput.value = '10';
+    }
+    
     // h3を元に戻す
     const modalHeaderH3 = document.querySelector('#quantity-input-modal .modal-header h3');
     if (modalHeaderH3) {
@@ -672,6 +685,7 @@ function resetQuantityInputModal() {
     
     // 状態を更新
     updateBatchInputsState();
+    updateBatchIntervalInputState();
     updateRemainingQuantity();
     // 注文ボタンを無効化
     updateOrderButtonState();
@@ -684,6 +698,14 @@ function setupQuantityInputModalEvents() {
     batchDivisionRadios.forEach(radio => {
         radio.addEventListener('change', function() {
             updateBatchInputsState();
+        });
+    });
+    
+    // バッチ間隔ラジオボタンの変更イベント
+    const batchIntervalRadios = document.querySelectorAll('input[name="batch-interval"]');
+    batchIntervalRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            updateBatchIntervalInputState();
         });
     });
     
@@ -721,6 +743,22 @@ function updateBatchInputsState() {
             // 指定選択時は有効化
             batchInputsSection.classList.remove('disabled');
             batchAddBtn.disabled = false;
+        }
+    }
+}
+
+// バッチ間隔ラジオボタンの状態に応じて入力欄を表示/非表示
+function updateBatchIntervalInputState() {
+    const batchIntervalSpecify = document.getElementById('batch-interval-specify');
+    const batchIntervalInputContainer = document.getElementById('batch-interval-input-container');
+    
+    if (batchIntervalSpecify && batchIntervalInputContainer) {
+        if (batchIntervalSpecify.checked) {
+            // 指定選択時は入力欄を表示
+            batchIntervalInputContainer.style.display = 'flex';
+        } else {
+            // おまかせ選択時は入力欄を非表示
+            batchIntervalInputContainer.style.display = 'none';
         }
     }
 }

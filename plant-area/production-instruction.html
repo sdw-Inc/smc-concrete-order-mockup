@@ -126,6 +126,16 @@
                                 <td class="info-value" id="batch-rule">-</td>
                             </tr>
                             <tr>
+                                <td class="info-label">バッチ間隔</td>
+                                <td class="info-value">
+                                    <div class="batch-interval-container">
+                                        <input type="number" id="batch-interval-input" class="batch-interval-input" min="1">
+                                        <span class="batch-interval-unit">分</span>
+                                        <span id="batch-interval-specified" class="batch-interval-specified" style="display: none;"></span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td class="info-label">コメント</td>
                                 <td class="info-value" id="batch-message"></td>
                             </tr>
@@ -133,7 +143,7 @@
                                 <td class="info-label">1バッチ量</td>
                                 <td class="info-value">
                                     <div class="batch-size-container">
-                                        <input type="number" id="batch-size-input" class="batch-size-input" step="0.1" min="0.0" value="0.0">
+                                        <input type="number" id="batch-size-input" class="batch-size-input" step="0.1" min="0.0">
                                         <span class="batch-size-unit">㎥</span>
                                     </div>
                                 </td>
@@ -165,7 +175,6 @@
                                 <tr class="area-header batch-list-header">
                                     <th class="batch-no-header">バッチNo</th>
                                     <th class="batch-m3-header">m3数</th>
-                                    <th class="batch-time-header">練順時刻</th>
                                     <th class="batch-remove-header">削除</th>
                                 </tr>
                             </thead>
@@ -576,6 +585,14 @@
                                 <option value="No.03">No.03</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">変更先物件略称</span>
+                        <span class="modal-value" id="change-after-modal-destination-project">-</span>
+                    </div>
+                    <div class="modal-info-row">
+                        <span class="modal-label">変更先強度</span>
+                        <span class="modal-value" id="change-after-modal-destination-strength">-</span>
                     </div>
                 </div>
                 <div class="modal-footer">

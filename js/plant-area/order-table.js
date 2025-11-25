@@ -76,6 +76,12 @@ function handleRowClick(e) {
     // 全ての行の選択を解除
     clearRowSelection();
     
+    // batch-schedule-tableで選択されているセルがあれば、そのセルの選択状態を解除
+    const selectedBatchScheduleCells = document.querySelectorAll('#batch-schedule-tbody .clickable-cell.selected');
+    selectedBatchScheduleCells.forEach(cell => {
+        cell.classList.remove('selected');
+    });
+    
     // クリックされた行が選択されていなかった場合は選択状態にする
     if (!isSelected) {
         row.classList.add('selected');
@@ -90,6 +96,40 @@ function handleRowClick(e) {
             }
         }
         
+        // 行のbatchStatusを取得（行のクラスまたはbatch-status要素のクラスから判断）
+        const batchStatusElement = row.querySelector('.batch-status');
+        const isPending = row.classList.contains('batch-status-pending') || 
+                         (batchStatusElement && batchStatusElement.classList.contains('pending'));
+        const isCompleted = batchStatusElement && batchStatusElement.classList.contains('completed');
+        
+        // batchStatusがpendingの場合の処理
+        if (isPending && selectedOrderInfo) {
+            // batch-status要素をactiveにする
+            if (batchStatusElement) {
+                setBatchStatusActive(batchStatusElement);
+            }
+            // handleBatchStatusClickの処理を実行（showBatchDivisionModalを呼び出す）
+            if (typeof showBatchDivisionModal === 'function') {
+                showBatchDivisionModal(selectedOrderInfo);
+                currentDisplayedOrder = selectedOrderInfo;
+                // バッチリストをリセット
+                if (typeof clearBatchList === 'function') {
+                    clearBatchList();
+                }
+            }
+        }
+        
+        // batchStatusがcompletedの場合の処理
+        if (isCompleted) {
+            // 全てのbatch-statusのactive状態を解除
+            clearBatchStatusActive();
+            // バッチ分割表示を初期化
+            if (typeof clearBatchDivisionDisplay === 'function') {
+                clearBatchDivisionDisplay();
+                currentDisplayedOrder = null;
+            }
+        }
+        
         // デバッグ用ログ（Aラインの問題を調査）
         if (selectedOrderInfo && selectedOrderInfo.line && selectedOrderInfo.line.includes('Aライン')) {
             console.log('handleRowClick - Aライン:', {
@@ -101,7 +141,20 @@ function handleRowClick(e) {
         
         // 選択された行のラインに対応する列のみを更新
         if (selectedOrderInfo && selectedOrderInfo.line && typeof generateBatchScheduleData === 'function') {
+            // 選択した行の情報を保存（generateBatchScheduleData後に復元するため）
+            const selectedOrderNo = selectedOrderInfo.orderNo;
+            const selectedLine = selectedOrderInfo.line;
+            const selectedProject = selectedOrderInfo.project;
+            
             generateBatchScheduleData(selectedOrderInfo.line);
+            
+            // generateBatchScheduleData後に選択状態を復元
+            // 少し遅延を入れて、DOM更新が完了してから選択状態を復元
+            setTimeout(() => {
+                if (typeof selectOrderTableRowByOrderInfo === 'function') {
+                    selectOrderTableRowByOrderInfo(selectedOrderNo, selectedLine, selectedProject);
+                }
+            }, 0);
         }
     } else {
         // 選択解除された場合は、lineDisplayedOrderMapに保存されている注文をそのまま表示し続ける
@@ -288,6 +341,11 @@ function updateOrderTableData(factoryValue) {
             row.classList.add('batch-status-pending');
         }
         
+        // 茨城工場かつbatchStatusがpendingの場合、batch-status要素にdisabledクラスを追加
+        const isIbarakiPending = factoryValue === 'ibaraki-factory' && 
+                                 (order.batchStatus === 'pending' || (!order.batchStatus && statusClass === 'pending'));
+        const batchStatusDisabledClass = isIbarakiPending ? ' disabled' : '';
+        
         // 削除ボタンの状態を決定（バッチ割が済でも削除可能）
         const deleteButtonHtml = '<button class="delete-btn" onclick="showDeleteOrderModal(this)">削除</button>';
         
@@ -309,7 +367,7 @@ function updateOrderTableData(factoryValue) {
                 </select>
                 `}
             </td>
-            <td><span class="batch-status ${statusClass}">${statusText}</span></td>
+            <td><span class="batch-status ${statusClass}${batchStatusDisabledClass}">${statusText}</span></td>
             <td>${parseFloat(order.wetQuantity).toFixed(2)}㎥</td>
             <td>${deleteButtonHtml}</td>
         `;
@@ -331,6 +389,10 @@ function updateOrderTableData(factoryValue) {
 function setupBatchStatusClickEvents() {
     const batchStatusElements = document.querySelectorAll('.batch-status');
     batchStatusElements.forEach(element => {
+        // disabledクラスが付いている場合はイベントリスナーを設定しない
+        if (element.classList.contains('disabled')) {
+            return;
+        }
         // 既存のイベントリスナーを削除
         element.removeEventListener('click', handleBatchStatusClickEvent);
         // 新しいイベントリスナーを追加
@@ -341,6 +403,10 @@ function setupBatchStatusClickEvents() {
 // バッチ割ボタンクリックイベントハンドラー
 function handleBatchStatusClickEvent(event) {
     event.stopPropagation();
+    // 茨城工場でdisabledクラスが付いている場合は処理しない
+    if (event.target.classList.contains('disabled')) {
+        return;
+    }
     handleBatchStatusClick(event.target);
 }
 
@@ -384,4 +450,28 @@ function selectRowByOrderInfo(orderInfo) {
             }
         }
     });
+}
+
+// 注文No、ライン、プロジェクトに基づいてorder-tableの行を選択状態にする関数
+function selectOrderTableRowByOrderInfo(orderNo, line, project) {
+    // 対応する行を見つけて選択状態にする
+    const allRows = document.querySelectorAll('.order-table tbody tr');
+    allRows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length >= 4) {
+            const rowOrderNo = cells[3].textContent.trim(); // 注文No列
+            const rowLine = cells[1].textContent.trim(); // ライン列
+            const rowProject = cells[2].textContent.trim(); // プロジェクト列
+            
+            if (rowOrderNo === String(orderNo) && rowLine === line && rowProject === project) {
+                row.classList.add('selected');
+            }
+        }
+    });
+}
+
+// order-tableの行の選択状態をクリアする関数
+function clearOrderTableRowSelection() {
+    const allRows = document.querySelectorAll('.order-table tbody tr');
+    allRows.forEach(row => row.classList.remove('selected'));
 }

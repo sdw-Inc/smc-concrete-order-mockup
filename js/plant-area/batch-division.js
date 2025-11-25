@@ -44,7 +44,18 @@ function clearBatchDivisionDisplay() {
         // バッチサイズ入力を初期値に戻す
         const batchSizeInput = document.getElementById('batch-size-input');
         if (batchSizeInput) {
-            batchSizeInput.value = '0.00';
+            batchSizeInput.value = '';
+        }
+        
+        // バッチ間隔入力を初期値に戻す
+        const batchIntervalInput = document.getElementById('batch-interval-input');
+        const batchIntervalSpecified = document.getElementById('batch-interval-specified');
+        if (batchIntervalInput) {
+            batchIntervalInput.value = '';
+        }
+        if (batchIntervalSpecified) {
+            batchIntervalSpecified.style.display = 'none';
+            batchIntervalSpecified.textContent = '';
         }
         
         // バッチリストをクリア
@@ -71,6 +82,16 @@ function updateRemainingQuantity() {
     }
 }
 
+// バッチ間隔入力値を取得する関数
+function getBatchInterval() {
+    const batchIntervalInput = document.getElementById('batch-interval-input');
+    if (batchIntervalInput) {
+        const value = parseInt(batchIntervalInput.value, 10);
+        return isNaN(value) || value < 1 ? 10 : value; // デフォルト値は10
+    }
+    return 10; // 要素が見つからない場合も10を返す
+}
+
 // バッチ分割情報を表示する関数
 function displayBatchDivisionInfo(orderInfo) {
     try {
@@ -94,6 +115,7 @@ function displayBatchDivisionInfo(orderInfo) {
         // order-data.jsから直接batchRuleとmessageを取得
         let batchRule = '-';
         let message = '-';
+        let order = null;
         
         try {
             // 現在選択されている工場を取得
@@ -106,7 +128,6 @@ function displayBatchDivisionInfo(orderInfo) {
                 // ラインのデータを取得
                 // まず、指定されたラインで検索
                 let lineData = factoryData[orderInfo.line];
-                let order = null;
                 
                 if (lineData) {
                     // 注文Noで検索
@@ -149,6 +170,30 @@ function displayBatchDivisionInfo(orderInfo) {
         
         // メッセージの設定（コメントがない時は「-」を表示しない）
         elements.message.textContent = message === '-' ? '' : message;
+        
+        // バッチ間隔の表示を更新（orderが見つかった場合も見つからない場合も処理）
+        const batchIntervalInput = document.getElementById('batch-interval-input');
+        const batchIntervalSpecified = document.getElementById('batch-interval-specified');
+        
+        if (batchIntervalInput && batchIntervalSpecified) {
+            // batchTimeを取得
+            let batchTime = null;
+            if (order && order.batchTime && order.batchTime.trim() !== '') {
+                batchTime = order.batchTime.trim();
+            }
+            
+            // batchTimeが空欄でない場合、指定表示を表示
+            if (batchTime) {
+                batchIntervalSpecified.textContent = `指定:${batchTime}分間隔`;
+                batchIntervalSpecified.style.display = 'inline';
+                // 入力欄の値をbatchTimeに設定
+                batchIntervalInput.value = batchTime;
+            } else {
+                batchIntervalSpecified.style.display = 'none';
+                // デフォルト値10を設定
+                batchIntervalInput.value = '10';
+            }
+        }
         
         // 残り量の計算（batch-remaining要素を更新）
         // 少し遅延してから残りを更新（DOM更新を待つ）
@@ -307,8 +352,9 @@ function handleAutoBatchDivision(batchSize) {
         // 浮動小数点の計算誤差を修正
         const roundedBatchSize = Math.round(currentBatchSize * 1000) / 1000;
         
-        // バッチ時刻を計算（10分ずつ追加）
-        const batchTime = new Date(now.getTime() + ((batchNumber - 1) * 10 * 60 * 1000));
+        // バッチ時刻を計算（バッチ間隔分ずつ追加）
+        const batchInterval = getBatchInterval();
+        const batchTime = new Date(now.getTime() + ((batchNumber - 1) * batchInterval * 60 * 1000));
         
         // バッチを追加
         addBatchToList(orderNo, batchNumber, roundedBatchSize, batchTime);
@@ -343,7 +389,6 @@ function addBatchToList(orderNo, batchNumber, volume, time) {
         <td class="batch-m3-cell">
             <input type="number" class="batch-m3-input" value="${volume.toFixed(2)}" step="0.01" min="0" onchange="updateRemainingVolume()">
         </td>
-        <td class="batch-time-cell"></td>
         <td class="batch-remove-cell">
             <button class="batch-remove-btn" onclick="removeBatchRow(this)">×</button>
         </td>
@@ -639,13 +684,11 @@ function handleBatchConfirm() {
         batchRows.forEach((row, index) => {
             const batchNoCell = row.querySelector('.batch-no-cell');
             const m3Input = row.querySelector('.batch-m3-input');
-            const timeCell = row.querySelector('.batch-time-cell');
             
             if (batchNoCell && m3Input) {
                 batchData.push({
                     batchNo: batchNoCell.textContent.trim(),
-                    m3: parseFloat(m3Input.value) || 0,
-                    time: timeCell ? timeCell.textContent.trim() : ''
+                    m3: parseFloat(m3Input.value) || 0
                 });
             }
         });
@@ -689,9 +732,10 @@ function handleTochigiBatchConfirm(orderInfo, batchData, baseTime) {
         const strength = strengthMatch ? strengthMatch[1] : orderInfo.strength || '';
         
         // 各バッチをmixing-order-tableに追加
+        const batchInterval = getBatchInterval();
         batchData.forEach((batch, index) => {
-            // 時刻を計算（基準時刻から10分ずつ加算）
-            const batchTime = new Date(baseTime.getTime() + (index * 10 * 60 * 1000));
+            // 時刻を計算（基準時刻からバッチ間隔分ずつ加算）
+            const batchTime = new Date(baseTime.getTime() + (index * batchInterval * 60 * 1000));
             const timeString = formatTime(batchTime);
             
             // 行を生成
@@ -795,9 +839,10 @@ function handleIbarakiBatchConfirm(orderInfo, batchData, baseTime) {
         const strength = strengthMatch ? strengthMatch[1] : orderInfo.strength || '';
         
         // バッチデータをフォーマットして保存
+        const batchInterval = getBatchInterval();
         const formattedBatches = batchData.map((batch, index) => {
-            // 時刻を計算（基準時刻から10分ずつ加算）
-            const batchTime = new Date(baseTime.getTime() + (index * 10 * 60 * 1000));
+            // 時刻を計算（基準時刻からバッチ間隔分ずつ加算）
+            const batchTime = new Date(baseTime.getTime() + (index * batchInterval * 60 * 1000));
             const timeString = formatTime(batchTime);
             
             return {

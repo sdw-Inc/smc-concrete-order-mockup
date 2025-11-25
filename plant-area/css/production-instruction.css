@@ -31,6 +31,11 @@
     display: none !important;
 }
 
+/* 茨城工場選択時のグリッド行の高さ調整 */
+.ibaraki-factory .parent {
+    grid-template-rows: 250px 0.5fr 1.3fr 0.7fr;
+}
+
 /* 茨城工場選択時の打設量テーブルスクロールバー無効化 */
 .ibaraki-factory .pouring-volume-table-wrapper {
     overflow: hidden;
@@ -44,6 +49,11 @@
 /* 茨城工場選択時の練り混ぜ確定エリア位置調整 */
 .ibaraki-factory .batch-selection-confirmed-area {
     grid-area: 2 / 4 / 5 / 5;
+}
+
+/* 茨城工場選択時の注文エリア高さ調整 */
+.ibaraki-factory .order-area {
+    height: 250px;
 }
 
 .transport-instruction-area {
@@ -281,7 +291,7 @@
 
 /* 注文エリアのスタイル */
 .order-area {
-    height: 300px;
+    height: 250px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -424,6 +434,12 @@
     font-weight: bold;
 }
 
+/* 茨城工場選択時：batch-status pendingをクリック不可にする */
+.batch-status.pending.disabled {
+    pointer-events: none !important;
+    cursor: default !important;
+}
+
 /* 削除ボタンのスタイル */
 .delete-btn {
     background: none;
@@ -499,28 +515,58 @@
 
 /* バッチサイズ入力コンテナ */
 .batch-size-container {
-    position: relative;
     display: flex;
     align-items: center;
+    justify-content: center;
+    gap: 5px;
     width: 100%;
 }
 
 .batch-size-input {
     margin: 3px;
-    margin-left: 15px;
     padding: 2px;
     border: 1px solid #a2a2a2;
     text-align: center;
     font-size: 14px;
     border-radius: 3px;
-    max-width: 75%;
+    max-width: 30%;
 }
 
 /* バッチサイズ入力の単位表示 */
 .batch-size-unit {
-    position: absolute;
-    right: 8px;
+    font-size: 14px;
     pointer-events: none;
+}
+
+/* バッチ間隔入力コンテナ */
+.batch-interval-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+}
+
+.batch-interval-input {
+    margin: 3px;
+    padding: 2px;
+    border: 1px solid #a2a2a2;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 3px;
+    max-width: 30%;
+}
+
+/* バッチ間隔入力の単位表示 */
+.batch-interval-unit {
+    font-size: 14px;
+}
+
+/* バッチ間隔指定表示 */
+.batch-interval-specified {
+    margin-left: 10px;
+    font-size: 12px;
+    color: #000;
 }
 
 /* コメント行のスタイル */
@@ -556,7 +602,7 @@
 }
 
 /* コメント行のセルに制約を設ける */
-.batch-info-table tr:nth-child(6) td:last-child {
+.batch-info-table tr:nth-child(7) td:last-child {
     height: 4em;
     max-height: 4em;
     overflow: hidden;
@@ -725,8 +771,6 @@
 .batch-no-header, .batch-no-cell { width: 25%; }/* バッチNo */
 
 .batch-m3-header, .batch-m3-cell { width: 30%; }/* m3数 */
-
-.batch-time-header, .batch-time-cell { width: 25%; }/* 練順時刻 */
 
 .batch-remove-header, .batch-remove-cell { width: 15%; }/* 削除 */
 
@@ -1293,13 +1337,18 @@
 .batch-schedule-table td.completed {
     background: #cccccc !important;
     border: 1px solid #a9a9a9 !important;
-    cursor: not-allowed !important;
+    cursor: pointer !important;
 }
 
 /* 茨城工場：完了セルが選択された時も緑の背景にする（選択状態を明確にするため） */
 .batch-schedule-table td.completed.selected {
     background: #90EE90 !important;
     cursor: pointer !important;
+}
+
+/* 茨城工場：完了セルのホバー時のスタイル */
+.batch-schedule-table td.completed.clickable-cell:hover {
+    background: #f0f0f0 !important;
 }
 
 /* 変更依頼バッチのスタイル */

@@ -329,16 +329,33 @@
                                 <label>総量 <span class="required">*</span></label>
                                 <input type="text" id="total-quantity-input" placeholder="注文する総量">
                             </div>
-                            <div class="batch-division-radio">
-                                <label class="radio-label">
-                                    <label>バッチ割</label>
-                                    <input type="radio" name="batch-division" value="auto" id="batch-division-auto" checked>
-                                    <span class="radio-text">おまかせ</span>
-                                </label>
-                                <label class="radio-label">
-                                    <input type="radio" name="batch-division" value="manual" id="batch-division-manual">
-                                    <span class="radio-text">指定</span>
-                                </label>
+                            <div class="batch-options-container">
+                                <div class="batch-division-radio">
+                                    <label class="radio-label">
+                                        <label>バッチ割</label>
+                                        <input type="radio" name="batch-division" value="auto" id="batch-division-auto" checked>
+                                        <span class="radio-text">おまかせ</span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="batch-division" value="manual" id="batch-division-manual">
+                                        <span class="radio-text">指定</span>
+                                    </label>
+                                </div>
+                                <div class="batch-interval-radio">
+                                    <label class="radio-label">
+                                        <label>バッチ間隔</label>
+                                        <input type="radio" name="batch-interval" value="auto" id="batch-interval-auto" checked>
+                                        <span class="radio-text">おまかせ</span>
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="batch-interval" value="specify" id="batch-interval-specify">
+                                        <span class="radio-text">指定</span>
+                                        <div class="batch-interval-input-container" id="batch-interval-input-container" style="display: none;">
+                                            <input type="text" id="batch-interval-input" value="10">
+                                            <span class="batch-interval-unit">分</span>
+                                        </div>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         

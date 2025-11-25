@@ -85,7 +85,7 @@
 
 .quantity-input-modal .modal-content {
     width: 95%;
-    max-width: 700px;
+    max-width: 750px;
     max-height: auto;
 }
 
@@ -136,7 +136,7 @@
 
 .quantity-input-panel {
     width: 100%;
-    max-width: 700px;
+    max-width: 750px;
     padding: 10px;
 }
 
@@ -169,9 +169,15 @@
 
 .total-quantity-container {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 40px;
     margin-bottom: 25px;
+}
+
+.batch-options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
 .total-quantity {
@@ -193,6 +199,13 @@
 }
 
 .batch-division-radio {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.batch-interval-radio {
     display: flex;
     align-items: center;
     gap: 15px;
@@ -261,6 +274,13 @@
     text-align: center;
 }
 
+.batch-division-radio .radio-label:first-child label,
+.batch-interval-radio .radio-label:first-child label {
+    width: 120px;
+    min-width: 120px;
+    text-align: right;
+}
+
 .radio-label input[type="radio"] {
     width: 18px;
     height: 18px;
@@ -269,6 +289,30 @@
 }
 
 .radio-text {
+    font-size: 16px;
+    color: #000000;
+}
+
+.batch-interval-input-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-left: 10px;
+}
+
+.batch-interval-radio .radio-label {
+    position: relative;
+}
+
+.batch-interval-input-container input {
+    width: 60px;
+    padding: 4px;
+    border: 2px solid #000000;
+    font-size: 16px;
+    text-align: center;
+}
+
+.batch-interval-unit {
     font-size: 16px;
     color: #000000;
 }

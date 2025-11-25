@@ -694,6 +694,9 @@ function generateBatchScheduleData(targetLineName = null) {
     
     // セルクリックイベントを設定
     setupBatchScheduleCellClickEvents();
+    
+    // 既に選択されているセルがある場合は、対応するorder-tableの行も選択状態にする
+    syncOrderTableRowSelectionFromBatchSchedule();
 }
 
 // ラインをデフォルト表示に戻す関数
@@ -1033,6 +1036,9 @@ function updateSingleLineInBatchSchedule(targetLineName, ibarakiData, lineToColu
         
         // セルクリックイベントを再設定
         setupBatchScheduleCellClickEvents();
+        
+        // 既に選択されているセルがある場合は、対応するorder-tableの行も選択状態にする
+        syncOrderTableRowSelectionFromBatchSchedule();
     }
 }
 
@@ -1045,6 +1051,47 @@ function setupBatchScheduleCellClickEvents() {
         tbody.removeEventListener('click', handleBatchScheduleCellClickEvent);
         // 新しいイベントリスナーを設定（イベント委譲）
         tbody.addEventListener('click', handleBatchScheduleCellClickEvent);
+    }
+}
+
+// batch-schedule-tableで選択されているセルに対応するorder-tableの行を選択状態にする関数
+function syncOrderTableRowSelectionFromBatchSchedule() {
+    // 茨城工場選択時のみ処理
+    const factorySelector = document.querySelector('.factory-selector');
+    if (!factorySelector || factorySelector.value !== 'ibaraki-factory') {
+        return;
+    }
+    
+    // 選択されているセルを取得
+    const selectedCells = document.querySelectorAll('#batch-schedule-tbody .clickable-cell.selected');
+    
+    if (selectedCells.length === 0) {
+        // 選択されているセルがない場合でも、order-tableに選択されている行がある場合はクリアしない
+        // （order-tableの行を直接選択した場合は、その選択状態を維持するため）
+        // ただし、batch-schedule-tableのセルが選択解除された場合は、order-tableの行の選択もクリアする
+        // この関数は、batch-schedule-tableのデータ更新時に呼び出されるため、
+        // セルが選択されていない場合は、order-tableの行の選択をクリアしない
+        // （order-tableの行を直接選択した場合は、その選択状態を維持する）
+        return;
+    }
+    
+    // 最初の選択されているセルを使用
+    const selectedCell = selectedCells[0];
+    const line = selectedCell.getAttribute('data-line');
+    const project = selectedCell.getAttribute('data-project');
+    const batchNo = selectedCell.getAttribute('data-batch-no');
+    
+    if (!line || !project || !batchNo) {
+        return;
+    }
+    
+    // バッチNoから注文Noを抽出（例：'1-1' → '1'）
+    const batchNoParts = batchNo.split('-');
+    const orderNo = batchNoParts.length > 1 ? batchNoParts[0] : batchNo;
+    
+    // order-tableの行を選択状態にする
+    if (typeof selectOrderTableRowByOrderInfo === 'function') {
+        selectOrderTableRowByOrderInfo(orderNo, line, project);
     }
 }
 
@@ -1070,6 +1117,8 @@ function handleBatchScheduleCellClick(cell) {
     // 既に選択されている場合は選択解除
     if (cell.classList.contains('selected')) {
         cell.classList.remove('selected');
+        // 対応するorder-tableの行の選択も解除
+        clearOrderTableRowSelection();
         clearMixingInstructionArea();
         return;
     }
@@ -1092,6 +1141,9 @@ function handleBatchScheduleCellClick(cell) {
         row.classList.remove('selected');
     });
     
+    // order-tableの行の選択もクリア
+    clearOrderTableRowSelection();
+    
     // データを取得
     const data = {
         batchNo: cell.getAttribute('data-batch-no'),
@@ -1110,16 +1162,23 @@ function handleBatchScheduleCellClick(cell) {
     
     // バッチデータのインデックスを計算（orderDataから該当するバッチを探す）
     let batchIndex = -1;
+    let orderNo = null;
     if (orderData && orderData['ibaraki-factory'] && orderData['ibaraki-factory'][data.line]) {
         const lineOrders = orderData['ibaraki-factory'][data.line];
         const order = lineOrders.find(o => o.project === data.project && o.batchStatus === 'completed');
         if (order && order.batches && Array.isArray(order.batches)) {
             batchIndex = order.batches.findIndex(batch => batch.batchNo === data.batchNo);
+            orderNo = order.orderNo;
         }
     }
     
     // セルを選択状態にする
     cell.classList.add('selected');
+    
+    // 対応するorder-tableの行を選択状態にする
+    if (orderNo && data.line && data.project) {
+        selectOrderTableRowByOrderInfo(orderNo, data.line, data.project);
+    }
     
     // 完了セルの場合は練混指示エリアを更新しない（何も表示しない）
     if (data.isCompleted) {
@@ -1519,8 +1578,9 @@ function updateMixingInstructionButtons() {
     }
     
     // ボタンの有効/無効を設定
-    // 練り上がったバッチ割が選択されている場合は、練り指示変更と削除ボタンは無効
-    if (changeBtn) changeBtn.disabled = !hasSelectedData || hasCompletedSelectedData;
+    // 練り指示変更ボタンは、選択されたデータがあれば有効（完了済でも有効）
+    if (changeBtn) changeBtn.disabled = !hasSelectedData;
+    // 練り上がったバッチ割が選択されている場合は、削除ボタンは無効
     if (deleteBtn) deleteBtn.disabled = !hasSelectedData || hasCompletedSelectedData;
     // 練り上がり後変更ボタンは、練り上がったバッチ割が選択されている場合のみ有効
     if (changeAfterBtn) changeAfterBtn.disabled = !hasCompletedSelectedData;
@@ -1907,6 +1967,9 @@ function handleChangeAfterMixingClick() {
         formworkSelect.value = '';
     }
     
+    // 変更先項目を初期化
+    updateChangeAfterModalDestinationFields();
+    
     // モーダルを表示
     document.getElementById('change-after-mixing-modal').style.display = 'flex';
     
@@ -1958,6 +2021,8 @@ function setupChangeAfterMixingModalEvents() {
     const modal = document.getElementById('change-after-mixing-modal');
     const cancelBtn = document.getElementById('change-after-modal-cancel');
     const confirmBtn = document.getElementById('change-after-modal-confirm');
+    const lineSelect = document.getElementById('change-after-modal-line');
+    const formworkSelect = document.getElementById('change-after-modal-formwork');
     
     // 既存のイベントリスナーを削除
     if (cancelBtn) {
@@ -1970,12 +2035,63 @@ function setupChangeAfterMixingModalEvents() {
         confirmBtn.addEventListener('click', handleChangeAfterModalConfirm);
     }
     
+    // ラインと型枠番号の選択変更イベント
+    if (lineSelect) {
+        lineSelect.removeEventListener('change', updateChangeAfterModalDestinationFields);
+        lineSelect.addEventListener('change', updateChangeAfterModalDestinationFields);
+    }
+    
+    if (formworkSelect) {
+        formworkSelect.removeEventListener('change', updateChangeAfterModalDestinationFields);
+        formworkSelect.addEventListener('change', updateChangeAfterModalDestinationFields);
+    }
+    
     // モーダル外クリックで閉じる
     modal.addEventListener('click', function(e) {
         if (e.target === modal) {
             handleChangeAfterModalCancel();
         }
     });
+}
+
+// 練り上がり後変更モーダルの変更先項目を更新
+function updateChangeAfterModalDestinationFields() {
+    const lineSelect = document.getElementById('change-after-modal-line');
+    const formworkSelect = document.getElementById('change-after-modal-formwork');
+    const destinationProjectElement = document.getElementById('change-after-modal-destination-project');
+    const destinationStrengthElement = document.getElementById('change-after-modal-destination-strength');
+    
+    if (!lineSelect || !formworkSelect || !destinationProjectElement || !destinationStrengthElement) {
+        return;
+    }
+    
+    const selectedLine = lineSelect.value;
+    const selectedFormwork = formworkSelect.value;
+    
+    // ラインと型枠番号の両方が選択されている場合のみ値を表示
+    if (selectedLine && selectedFormwork) {
+        // 型枠番号に応じて変更先物件略称を設定
+        const formworkToProjectMap = {
+            'No.01': '〇〇駅西口開発',
+            'No.02': '〇〇丁目工事',
+            'No.03': '〇〇ビル新築工事'
+        };
+        
+        const destinationProject = formworkToProjectMap[selectedFormwork] || '-';
+        destinationProjectElement.textContent = destinationProject;
+        
+        // 変更先強度は現在のデータの強度を表示
+        if (window.currentSelectedData && window.currentSelectedData.data) {
+            const currentStrength = window.currentSelectedData.data.strength || '-';
+            destinationStrengthElement.textContent = currentStrength;
+        } else {
+            destinationStrengthElement.textContent = '-';
+        }
+    } else {
+        // どちらか一方でも未選択の場合は「-」を表示
+        destinationProjectElement.textContent = '-';
+        destinationStrengthElement.textContent = '-';
+    }
 }
 
 // 練り上がり後変更モーダルキャンセル処理

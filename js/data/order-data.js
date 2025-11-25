@@ -20,6 +20,7 @@ const orderData = {
                 batcher: '第2',
                 batchStatus: 'completed',
                 batchRule: 'おまかせ',
+                batchTime: '',
                 message: '急ぎでお願いします。\n追加で注文してください。\n1バッチ目11.4㎥\n2バッチ目6.0㎥\n3バッチ目6.0㎥\n4バッチ目6.0㎥',
                 wetQuantity: 2.6
             },
@@ -37,6 +38,7 @@ const orderData = {
                 batcher: '第2',
                 batchStatus: 'completed',
                 batchRule: 'おまかせ',
+                batchTime: '',
                 message: '',
                 wetQuantity: 0
             },
@@ -54,6 +56,7 @@ const orderData = {
                 batcher: '第3',
                 batchStatus: 'completed',
                 batchRule: 'おまかせ',
+                batchTime: '',
                 message: '',
                 wetQuantity: 0
             },
@@ -71,6 +74,7 @@ const orderData = {
                 batcher: '第2',
                 batchStatus: 'pending',
                 batchRule: 'おまかせ',
+                batchTime: '',
                 message: '',
                 wetQuantity: 0
             },
@@ -88,6 +92,7 @@ const orderData = {
                 batcher: '第2',
                 batchStatus: 'pending',
                 batchRule: 'おまかせ',
+                batchTime: '',
                 message: '',
                 wetQuantity: 0
             }
@@ -107,6 +112,7 @@ const orderData = {
                 batcher: '第2',
                 batchStatus: 'pending',
                 batchRule: 'おまかせ',
+                batchTime: '5',
                 message: '',
                 wetQuantity: 0
             }
@@ -126,6 +132,7 @@ const orderData = {
                 batcher: '第3',
                 batchStatus: 'pending',
                 batchRule: 'おまかせ',
+                batchTime: '',
                 message: '',
                 wetQuantity: 0
             }
@@ -147,6 +154,7 @@ const orderData = {
                 batcher: '',
                 batchStatus: 'completed',
                 batchRule: 'おまかせ',
+                batchTime: '',
                 message: '',
                 wetQuantity: 0,
                 batches: [
@@ -174,6 +182,7 @@ const orderData = {
                 batcher: '',
                 batchStatus: 'completed',
                 batchRule: 'おまかせ',
+                batchTime: '',
                 message: '',
                 wetQuantity: 0,
                 batches: [
@@ -199,6 +208,7 @@ const orderData = {
                 batcher: '',
                 batchStatus: 'pending',
                 batchRule: 'おまかせ',
+                batchTime: '5',
                 message: '',
                 wetQuantity: 0
             },
@@ -216,6 +226,7 @@ const orderData = {
                 batcher: '',
                 batchStatus: 'pending',
                 batchRule: 'おまかせ',
+                batchTime: '',
                 message: '',
                 wetQuantity: 0
             }
@@ -235,6 +246,7 @@ const orderData = {
                 batcher: '',
                 batchStatus: 'pending',
                 batchRule: 'おまかせ',
+                batchTime: '',
                 message: '',
                 wetQuantity: 0
             }
@@ -253,6 +265,7 @@ const orderData = {
                 batcher: '',
                 batchStatus: 'completed',
                 batchRule: 'おまかせ',
+                batchTime: '',
                 message: '',
                 wetQuantity: 2.6,
                 batches: [
@@ -279,6 +292,7 @@ const orderData = {
                 batcher: '',
                 batchStatus: 'completed',
                 batchRule: 'おまかせ',
+                batchTime: '',
                 message: '',
                 wetQuantity: 0,
                 batches: [
@@ -304,6 +318,7 @@ const orderData = {
                 batcher: '',
                 batchStatus: 'pending',
                 batchRule: '指定',
+                batchTime: '',
                 message: '急ぎでお願いします。\n1バッチ目1.3㎥\n2バッチ目1.0㎥\n3バッチ目1.0㎥\n4バッチ目1.0㎥',
                 wetQuantity: 0
             }
@@ -322,6 +337,7 @@ const orderData = {
                 batcher: '',
                 batchStatus: 'completed',
                 batchRule: 'おまかせ',
+                batchTime: '',
                 message: '',
                 wetQuantity: 0,
                 batches: [
