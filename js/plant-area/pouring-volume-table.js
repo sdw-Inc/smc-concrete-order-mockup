@@ -14,8 +14,8 @@ function updatePouringVolumeTable(factoryValue) {
         pouringVolumeData = [
             { lineName: '栃木_Nライン', pouringVolume: '', mixingVolume: '', scheduledProduction: '' },
             { lineName: '栃木_南工場', pouringVolume: '9.0', mixingVolume: '9.5', scheduledProduction: '15.0' },
-            { lineName: '栃木_建築A北', pouringVolume: '0.0', mixingVolume: '0.0', scheduledProduction: '22.3' },
-            { lineName: '栃木_建築B北', pouringVolume: '13.0', mixingVolume: '6.5', scheduledProduction: '32.0' },
+            { lineName: '栃木_建築A北', pouringVolume: '3.6', mixingVolume: '5.2', scheduledProduction: '22.3' },
+            { lineName: '栃木_建築B北', pouringVolume: '4.2', mixingVolume: '6.5', scheduledProduction: '32.0' },
             { lineName: '栃木_建築A南', pouringVolume: '', mixingVolume: '', scheduledProduction: '' },
             { lineName: '栃木_建築B南', pouringVolume: '', mixingVolume: '', scheduledProduction: '' },
             { lineName: '栃木_建築鉄筋加工場', pouringVolume: '', mixingVolume: '', scheduledProduction: '' },
