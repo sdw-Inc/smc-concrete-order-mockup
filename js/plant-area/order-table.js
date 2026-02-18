@@ -43,16 +43,13 @@ function setupTableRowSelectionEvents() {
 
 // 行クリックのハンドラー関数
 function handleRowClick(e) {
-    // 茨城工場選択時のみ行選択を有効化
-    const factorySelector = document.querySelector('.factory-selector');
-    if (!factorySelector || factorySelector.value !== 'ibaraki-factory') {
+    // 削除ボタンをクリックした場合は処理しない
+    if (e.target.closest('.delete-btn')) {
         return;
     }
     
-    // バッチ割ボタンや削除ボタンをクリックした場合は処理しない
-    if (e.target.closest('.batch-status') || e.target.closest('.delete-btn')) {
-        return;
-    }
+    const factorySelector = document.querySelector('.factory-selector');
+    const factoryValue = factorySelector ? factorySelector.value : 'tochigi-factory';
     
     // クリックされた行を取得
     const row = e.target.closest('tr');
@@ -60,17 +57,32 @@ function handleRowClick(e) {
         return;
     }
     
+    // 注文明細テーブル内の行かどうか確認
+    if (!row.closest('.order-area .order-table')) {
+        return;
+    }
+    
     // 既に選択されている行かチェック
     const isSelected = row.classList.contains('selected');
     
-    // 選択解除される場合は、先に注文情報を取得（選択解除前に取得する必要がある）
-    let previousOrderInfo = null;
-    if (isSelected && typeof extractOrderInfoFromRow === 'function') {
-        try {
-            previousOrderInfo = extractOrderInfoFromRow(row);
-        } catch (error) {
-            console.warn('extractOrderInfoFromRowでエラーが発生しました:', error);
+    // 選択されている行を再度クリックした場合は、選択解除と練混バッチ割の表示をクリア
+    if (isSelected) {
+        // 全ての行の選択を解除
+        clearRowSelection();
+        
+        // batch-schedule-tableで選択されているセルがあれば、そのセルの選択状態を解除
+        const selectedBatchScheduleCells = document.querySelectorAll('#batch-schedule-tbody .clickable-cell.selected');
+        selectedBatchScheduleCells.forEach(cell => {
+            cell.classList.remove('selected');
+        });
+        
+        // 練混バッチ割の表示をクリア
+        if (typeof clearBatchDivisionDisplay === 'function') {
+            clearBatchDivisionDisplay();
         }
+        currentDisplayedOrder = null;
+        
+        return;
     }
     
     // 全ての行の選択を解除
@@ -82,83 +94,39 @@ function handleRowClick(e) {
         cell.classList.remove('selected');
     });
     
-    // クリックされた行が選択されていなかった場合は選択状態にする
-    if (!isSelected) {
-        row.classList.add('selected');
-        
-        // 選択された行の注文情報を取得
-        let selectedOrderInfo = null;
-        if (typeof extractOrderInfoFromRow === 'function') {
-            try {
-                selectedOrderInfo = extractOrderInfoFromRow(row);
-            } catch (error) {
-                console.warn('extractOrderInfoFromRowでエラーが発生しました:', error);
+    // 選択行の背景を緑にする（.selected クラスでCSSが適用される）
+    row.classList.add('selected');
+    
+    // 選択された行の注文情報を取得
+    let selectedOrderInfo = null;
+    if (typeof extractOrderInfoFromRow === 'function') {
+        try {
+            selectedOrderInfo = extractOrderInfoFromRow(row);
+        } catch (error) {
+            console.warn('extractOrderInfoFromRowでエラーが発生しました:', error);
+        }
+    }
+    
+    // 選択した注文データを練混バッチ割エリアに表示（両工場共通）
+    if (selectedOrderInfo && typeof showBatchDivisionModal === 'function') {
+        showBatchDivisionModal(selectedOrderInfo);
+        currentDisplayedOrder = selectedOrderInfo;
+        if (typeof clearBatchList === 'function') {
+            clearBatchList();
+        }
+    }
+    
+    // 茨城工場のみ：選択した行のラインの練り混ぜ順バッチを練混予定テーブルに表示
+    if (factoryValue === 'ibaraki-factory' && selectedOrderInfo && selectedOrderInfo.line && typeof generateBatchScheduleData === 'function') {
+        const selectedOrderNo = selectedOrderInfo.orderNo;
+        const selectedLine = selectedOrderInfo.line;
+        const selectedProject = selectedOrderInfo.project;
+        generateBatchScheduleData(selectedOrderInfo.line);
+        setTimeout(() => {
+            if (typeof selectOrderTableRowByOrderInfo === 'function') {
+                selectOrderTableRowByOrderInfo(selectedOrderNo, selectedLine, selectedProject);
             }
-        }
-        
-        // 行のbatchStatusを取得（行のクラスまたはbatch-status要素のクラスから判断）
-        const batchStatusElement = row.querySelector('.batch-status');
-        const isPending = row.classList.contains('batch-status-pending') || 
-                         (batchStatusElement && batchStatusElement.classList.contains('pending'));
-        const isCompleted = batchStatusElement && batchStatusElement.classList.contains('completed');
-        
-        // batchStatusがpendingの場合の処理
-        if (isPending && selectedOrderInfo) {
-            // batch-status要素をactiveにする
-            if (batchStatusElement) {
-                setBatchStatusActive(batchStatusElement);
-            }
-            // handleBatchStatusClickの処理を実行（showBatchDivisionModalを呼び出す）
-            if (typeof showBatchDivisionModal === 'function') {
-                showBatchDivisionModal(selectedOrderInfo);
-                currentDisplayedOrder = selectedOrderInfo;
-                // バッチリストをリセット
-                if (typeof clearBatchList === 'function') {
-                    clearBatchList();
-                }
-            }
-        }
-        
-        // batchStatusがcompletedの場合の処理
-        if (isCompleted) {
-            // 全てのbatch-statusのactive状態を解除
-            clearBatchStatusActive();
-            // バッチ分割表示を初期化
-            if (typeof clearBatchDivisionDisplay === 'function') {
-                clearBatchDivisionDisplay();
-                currentDisplayedOrder = null;
-            }
-        }
-        
-        // デバッグ用ログ（Aラインの問題を調査）
-        if (selectedOrderInfo && selectedOrderInfo.line && selectedOrderInfo.line.includes('Aライン')) {
-            console.log('handleRowClick - Aライン:', {
-                selectedOrderInfoLine: selectedOrderInfo.line,
-                orderNo: selectedOrderInfo.orderNo,
-                project: selectedOrderInfo.project
-            });
-        }
-        
-        // 選択された行のラインに対応する列のみを更新
-        if (selectedOrderInfo && selectedOrderInfo.line && typeof generateBatchScheduleData === 'function') {
-            // 選択した行の情報を保存（generateBatchScheduleData後に復元するため）
-            const selectedOrderNo = selectedOrderInfo.orderNo;
-            const selectedLine = selectedOrderInfo.line;
-            const selectedProject = selectedOrderInfo.project;
-            
-            generateBatchScheduleData(selectedOrderInfo.line);
-            
-            // generateBatchScheduleData後に選択状態を復元
-            // 少し遅延を入れて、DOM更新が完了してから選択状態を復元
-            setTimeout(() => {
-                if (typeof selectOrderTableRowByOrderInfo === 'function') {
-                    selectOrderTableRowByOrderInfo(selectedOrderNo, selectedLine, selectedProject);
-                }
-            }, 0);
-        }
-    } else {
-        // 選択解除された場合は、lineDisplayedOrderMapに保存されている注文をそのまま表示し続ける
-        // 何も処理しない（lineDisplayedOrderMapの状態を維持）
+        }, 0);
     }
 }
 

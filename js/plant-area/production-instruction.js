@@ -1209,6 +1209,11 @@ function handleBatchScheduleCellClick(cell) {
             index: batchIndex,
             data: data
         };
+        
+        // 練混指示エリアにデータを表示したら練り指示確定ボタンを有効化
+        setTimeout(function() {
+            updateConfirmMixingInstructionButton();
+        }, 0);
     }
     
     // ボタンの有効/無効を更新
@@ -1338,18 +1343,31 @@ function handleInstructionButtonClick(index, factory) {
     if (data) {
         // 指示ボタンクリック時は指示エリアのみ更新（行の選択状態は変更しない）
         updateMixingInstructionArea(data, factory, index);
+        // 練混指示エリアにデータを表示したら練り指示確定ボタンを有効化
+        setTimeout(function() {
+            updateConfirmMixingInstructionButton();
+        }, 0);
     }
 }
 
 // 練混指示テーブルに値が表示されているかチェック
 function hasMixingInstructionValues() {
-    const batchNo = document.getElementById('instruction-batch-no').textContent.trim();
-    const line = document.getElementById('instruction-line').textContent.trim();
-    const project = document.getElementById('instruction-project').textContent.trim();
-    const strength = document.getElementById('instruction-strength').textContent.trim();
+    const batchNoEl = document.getElementById('instruction-batch-no');
+    const lineEl = document.getElementById('instruction-line');
+    const projectEl = document.getElementById('instruction-project');
+    const strengthEl = document.getElementById('instruction-strength');
+    if (!batchNoEl || !lineEl || !projectEl || !strengthEl) return false;
     
-    // 主要な値がすべて「-」でない場合は値が表示されている
-    return batchNo !== '-' && line !== '-' && project !== '-' && strength !== '-';
+    const batchNo = batchNoEl.textContent.trim();
+    const line = lineEl.textContent.trim();
+    const project = projectEl.textContent.trim();
+    const strength = strengthEl.textContent.trim();
+    
+    // 主要な値がすべて「-」でなく空でもない場合は値が表示されている
+    return batchNo !== '-' && batchNo !== '' &&
+           line !== '-' && line !== '' &&
+           project !== '-' && project !== '' &&
+           strength !== '-' && strength !== '';
 }
 
 // 練り指示確定ボタンの有効/無効を更新
@@ -1363,32 +1381,42 @@ function updateConfirmMixingInstructionButton() {
 
 // 練混指示エリアの更新
 function updateMixingInstructionArea(data, factory, index) {
+    if (!data) return;
+    
     // 累計バッチNo（バッチNoの-の後ろの数字）
-    const batchNoParts = data.batchNo.split('-');
-    const cumulativeBatchNo = batchNoParts.length > 1 ? batchNoParts[1] : data.batchNo;
+    const batchNoStr = data.batchNo != null ? String(data.batchNo) : '';
+    const batchNoParts = batchNoStr.split('-');
+    const cumulativeBatchNo = batchNoParts.length > 1 ? batchNoParts[1] : (batchNoStr || '-');
     
     // 強度 数量（単位付き）
-    // data.volumeまたはdata.m3のどちらかを使用（互換性のため）
-    const volumeValue = parseFloat(data.volume || data.m3 || 0).toFixed(2);
-    const strengthQuantity = `${data.strength} ${volumeValue}㎥`;
-    
-    // 練混指示エリアの要素を更新
-    document.getElementById('instruction-batch-no').textContent = cumulativeBatchNo;
+    const vol = data.volume != null ? data.volume : (data.m3 != null ? data.m3 : 0);
+    const volumeValue = parseFloat(String(vol).replace(/[^\d.-]/g, '') || 0).toFixed(2);
+    const strengthStr = data.strength != null && String(data.strength).trim() !== '' ? String(data.strength).trim() : '-';
+    const strengthQuantity = strengthStr !== '-' ? `${strengthStr} ${volumeValue}㎥` : '-';
     
     // 茨城工場の場合はライン名の先頭に「茨城_」を付ける
-    let displayLine = data.line;
-    if (factory === 'ibaraki') {
-        displayLine = `茨城_${data.line}`;
+    let displayLine = data.line != null && String(data.line).trim() !== '' ? String(data.line).trim() : '-';
+    if (factory === 'ibaraki' && displayLine !== '-') {
+        displayLine = displayLine.startsWith('茨城_') ? displayLine : `茨城_${displayLine}`;
     }
-    document.getElementById('instruction-line').textContent = displayLine;
+    const displayProject = data.project != null && String(data.project).trim() !== '' ? String(data.project).trim() : '-';
     
-    document.getElementById('instruction-project').textContent = data.project;
-    document.getElementById('instruction-strength').textContent = strengthQuantity;
+    // 練混指示エリアの要素を更新
+    const batchNoEl = document.getElementById('instruction-batch-no');
+    const lineEl = document.getElementById('instruction-line');
+    const projectEl = document.getElementById('instruction-project');
+    const strengthEl = document.getElementById('instruction-strength');
+    if (batchNoEl) batchNoEl.textContent = cumulativeBatchNo;
+    if (lineEl) lineEl.textContent = displayLine;
+    if (projectEl) projectEl.textContent = displayProject;
+    if (strengthEl) strengthEl.textContent = strengthQuantity;
     
     // 調合NoとミキサーNoは入力欄なので、プレースホルダーを設定
     const mixNoInput = document.getElementById('instruction-mix-no');
-    mixNoInput.placeholder = '調合No';
-    mixNoInput.value = ''; // 一旦クリア
+    if (mixNoInput) {
+        mixNoInput.placeholder = '調合No';
+        mixNoInput.value = ''; // 一旦クリア
+    }
     
     // 注文データから調合Noを取得して設定
     let mixNo = '';
@@ -1444,14 +1472,16 @@ function updateMixingInstructionArea(data, factory, index) {
     }
     
     // 調合Noに値がある場合は設定、ない場合は空のまま
-    if (mixNo) {
+    if (mixNo && mixNoInput) {
         mixNoInput.value = mixNo;
     }
     
-    document.getElementById('instruction-mixer-no').value = '';
+    const mixerNoInput = document.getElementById('instruction-mixer-no');
+    if (mixerNoInput) mixerNoInput.value = '';
     
     // 標準期（仮の値）
-    document.getElementById('standard-period-value').textContent = '66666';
+    const standardPeriodEl = document.getElementById('standard-period-value');
+    if (standardPeriodEl) standardPeriodEl.textContent = '66666';
     
     // 練り指示確定ボタンの有効/無効を更新
     updateConfirmMixingInstructionButton();

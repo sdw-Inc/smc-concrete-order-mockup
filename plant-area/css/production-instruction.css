@@ -21,14 +21,15 @@
 .batch-selection-area { grid-area: 2 / 3 / 5 / 4; }
 /* 合計打設量エリア */
 .total-pouring-volume-area { grid-area: 1 / 4 / 3 / 5; }
-/* 練り混ぜ確定エリア */
-.batch-selection-confirmed-area { grid-area: 3 / 4 / 4 / 5; }
-/* 運搬指示エリア */
-.transport-instruction-area { grid-area: 4 / 4 / 5 / 5; }
-
-/* 茨城工場選択時のレイアウト調整 */
-.transport-instruction-area.hidden {
+/* 練り混ぜ確定エリア（運搬指示非表示のため 3/4/5/5 で下まで表示） */
+/* 運搬指示エリア（非表示） */
+.transport-instruction-area {
     display: none !important;
+}
+
+/* 運搬指示非表示時のレイアウト：練り混ぜ確定エリアを下まで拡張 */
+.batch-selection-confirmed-area {
+    grid-area: 3 / 4 / 5 / 5;
 }
 
 /* 茨城工場選択時のグリッド行の高さ調整 */
@@ -377,6 +378,11 @@
     background: #94ee94 !important;
 }
 
+/* 注文明細の選択行：背景を緑に */
+.order-area .order-table tbody tr.selected {
+    background: #90EE90 !important;
+}
+
 .unloading-number {
     display: inline-block;
     width: 20px;
@@ -478,6 +484,11 @@
 .order-table th:nth-child(8), .order-table td:nth-child(8) { width: 7%; } /* 調合No */
 .order-table th:nth-child(9), .order-table td:nth-child(9) { width: 7%; } /* m3 */
 .order-table th:nth-child(10), .order-table td:nth-child(10) { width: 7%; } /* バッチャー */
+/* バッチ割列を非表示 */
+.order-area .order-table th:nth-child(11), .order-area .order-table td:nth-child(11) {
+    display: none;
+}
+
 .order-table th:nth-child(11), .order-table td:nth-child(11) { width: 7%; } /* バッチ割 */
 .order-table th:nth-child(12), .order-table td:nth-child(12) { width: 7%; } /* 練湿数量 */
 .order-table th:nth-child(13), .order-table td:nth-child(13) { width: 5%; } /* 削除 */
